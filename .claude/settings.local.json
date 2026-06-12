@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(npx --version)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --use-npm --yes)",
+      "Bash(npx shadcn@latest init --yes --base-color neutral)",
+      "Bash(npx shadcn@latest init --yes)",
+      "Bash(npx shadcn@latest init --help)",
+      "Bash(npx shadcn@latest init -b radix --css-variables -y)",
+      "Bash(npx shadcn@latest init -b radix -p nova -y)",
+      "Bash(npx shadcn@latest add button card input label select textarea badge table tabs dialog alert-dialog dropdown-menu navigation-menu breadcrumb separator skeleton sonner progress avatar switch checkbox popover calendar -y)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest add command scroll-area -y)"
+    ]
+  }
+}
