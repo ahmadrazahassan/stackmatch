@@ -146,7 +146,7 @@ CREATE TABLE articles (
   content TEXT NOT NULL,
   featured_image_url TEXT,
   category_tag TEXT,
-  related_software_id UUID REFERENCES software(id),
+  related_software_id UUID REFERENCES software(id) ON DELETE SET NULL,
 
   -- Author
   author_name TEXT NOT NULL,
@@ -190,8 +190,8 @@ CREATE TABLE software_alternatives (
 -- COMPARISONS
 CREATE TABLE comparisons (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  software_a_id UUID REFERENCES software(id),
-  software_b_id UUID REFERENCES software(id),
+  software_a_id UUID REFERENCES software(id) ON DELETE CASCADE,
+  software_b_id UUID REFERENCES software(id) ON DELETE CASCADE,
   custom_verdict TEXT,
   meta_title TEXT,
   meta_description TEXT,
@@ -202,7 +202,7 @@ CREATE TABLE comparisons (
 -- AFFILIATE CLICK TRACKING
 CREATE TABLE affiliate_clicks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  software_id UUID REFERENCES software(id),
+  software_id UUID REFERENCES software(id) ON DELETE SET NULL,
   software_name TEXT,
   affiliate_url TEXT,
   clicked_at TIMESTAMPTZ DEFAULT NOW(),

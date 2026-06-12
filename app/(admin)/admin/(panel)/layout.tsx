@@ -1,4 +1,4 @@
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
+
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { createClient } from "@/lib/supabase/server";
 
@@ -31,11 +31,12 @@ export default async function AdminPanelLayout({
   const counts = await getCounts();
 
   return (
-    <div className="min-h-screen bg-muted">
-      <AdminSidebar counts={counts} />
-      <div className="md:pl-60">
-        <AdminHeader />
-        <main className="p-6">{children}</main>
+    <div className="min-h-screen bg-muted/30">
+      <div className="flex w-full flex-col">
+        <AdminHeader counts={counts} />
+        <main className="w-full p-4 pt-28 sm:p-8 sm:pt-32">
+          {children}
+        </main>
       </div>
     </div>
   );

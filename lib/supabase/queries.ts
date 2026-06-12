@@ -341,6 +341,36 @@ export async function getSiteStats(): Promise<{
   });
 }
 
+export async function searchContent(
+  query: string
+): Promise<{ software: Software[]; articles: Article[] }> {
+  const q = query.trim();
+  if (!q) return { software: [], articles: [] };
+  return safe({ software: [], articles: [] }, async () => {
+    const supabase = createPublicClient();
+    const [s, a] = await Promise.all([
+      supabase
+        .from("software")
+        .select(SOFTWARE_CARD_COLUMNS)
+        .eq("status", "published")
+        .textSearch("search_vector", q, { type: "plain", config: "english" })
+        .limit(20),
+      supabase
+        .from("articles")
+        .select(
+          "id, title, slug, excerpt, featured_image_url, category_tag, author_name, read_time_minutes, published_date, featured, status, created_at"
+        )
+        .eq("status", "published")
+        .textSearch("search_vector", q, { type: "plain", config: "english" })
+        .limit(20),
+    ]);
+    return {
+      software: (s.data as unknown as Software[]) ?? [],
+      articles: (a.data as unknown as Article[]) ?? [],
+    };
+  });
+}
+
 export async function getSiteSettings(): Promise<Record<string, string>> {
   return safe({}, async () => {
     const supabase = createPublicClient();

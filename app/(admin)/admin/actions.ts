@@ -46,6 +46,15 @@ export async function deleteSoftware(id: string): Promise<ActionResult> {
   return { ok: true };
 }
 
+export async function deleteSoftwareBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("software").delete().in("id", ids);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/software");
+  revalidatePublic();
+  return { ok: true };
+}
+
 export async function setSoftwareAlternatives(
   softwareId: string,
   alternativeIds: string[]
@@ -98,6 +107,15 @@ export async function deleteReview(id: string): Promise<ActionResult> {
   return { ok: true };
 }
 
+export async function deleteReviewBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("reviews").delete().in("id", ids);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/reviews");
+  revalidatePublic();
+  return { ok: true };
+}
+
 // ----------------------------------------------------------------------------
 // CATEGORIES
 // ----------------------------------------------------------------------------
@@ -120,6 +138,15 @@ export async function upsertCategory(
 export async function deleteCategory(id: string): Promise<ActionResult> {
   const supabase = await requireAuth();
   const { error } = await supabase.from("categories").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/categories");
+  revalidatePublic();
+  return { ok: true };
+}
+
+export async function deleteCategoryBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("categories").delete().in("id", ids);
   if (error) return { ok: false, error: error.message };
   revalidatePath("/admin/categories");
   revalidatePublic();
@@ -154,6 +181,15 @@ export async function deleteArticle(id: string): Promise<ActionResult> {
   return { ok: true };
 }
 
+export async function deleteArticleBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("articles").delete().in("id", ids);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/articles");
+  revalidatePublic();
+  return { ok: true };
+}
+
 // ----------------------------------------------------------------------------
 // COMPARISONS
 // ----------------------------------------------------------------------------
@@ -176,6 +212,15 @@ export async function upsertComparison(
 export async function deleteComparison(id: string): Promise<ActionResult> {
   const supabase = await requireAuth();
   const { error } = await supabase.from("comparisons").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/comparisons");
+  revalidatePublic();
+  return { ok: true };
+}
+
+export async function deleteComparisonBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("comparisons").delete().in("id", ids);
   if (error) return { ok: false, error: error.message };
   revalidatePath("/admin/comparisons");
   revalidatePublic();

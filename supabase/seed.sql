@@ -11,12 +11,12 @@
 -- CATEGORIES
 -- ----------------------------------------------------------------------------
 INSERT INTO categories (id, name, slug, icon, description, display_order) VALUES
-  ('c0000000-0000-0000-0000-000000000001', 'Accounting Software', 'accounting-software', '🧮', 'Bookkeeping, invoicing, VAT and financial reporting tools for South African businesses.', 1),
-  ('c0000000-0000-0000-0000-000000000002', 'Payroll Software', 'payroll-software', '💰', 'Payroll processing, payslips, SARS submissions, UIF and compliance for SA employers.', 2),
-  ('c0000000-0000-0000-0000-000000000003', 'HR Software', 'hr-software', '👥', 'Human resources, leave management, performance and employee self-service platforms.', 3),
-  ('c0000000-0000-0000-0000-000000000004', 'CRM Software', 'crm-software', '🤝', 'Customer relationship management, sales pipelines and contact management tools.', 4),
-  ('c0000000-0000-0000-0000-000000000005', 'ERP Software', 'erp-software', '🏭', 'Enterprise resource planning suites covering finance, inventory and operations.', 5),
-  ('c0000000-0000-0000-0000-000000000006', 'Project Management', 'project-management', '📋', 'Task tracking, team collaboration and project planning software.', 6);
+  ('c0000000-0000-0000-0000-000000000001', 'Accounting Software', 'accounting-software', '', 'Bookkeeping, invoicing, VAT and financial reporting tools for South African businesses.', 1),
+  ('c0000000-0000-0000-0000-000000000002', 'Payroll Software', 'payroll-software', '', 'Payroll processing, payslips, SARS submissions, UIF and compliance for SA employers.', 2),
+  ('c0000000-0000-0000-0000-000000000003', 'HR Software', 'hr-software', '', 'Human resources, leave management, performance and employee self-service platforms.', 3),
+  ('c0000000-0000-0000-0000-000000000004', 'CRM Software', 'crm-software', '', 'Customer relationship management, sales pipelines and contact management tools.', 4),
+  ('c0000000-0000-0000-0000-000000000005', 'ERP Software', 'erp-software', '', 'Enterprise resource planning suites covering finance, inventory and operations.', 5),
+  ('c0000000-0000-0000-0000-000000000006', 'Project Management', 'project-management', '', 'Task tracking, team collaboration and project planning software.', 6);
 
 -- ----------------------------------------------------------------------------
 -- SOFTWARE (8 demo entries)
@@ -27,7 +27,7 @@ INSERT INTO software (
   free_trial, free_version, pricing_plans, features, top_features,
   affiliate_url, vendor_website, vendor_name, founded_year,
   support_types, countries_available, languages,
-  meta_title, meta_description, status, featured
+  meta_title, meta_description, status, featured, logo_url
 ) VALUES
 (
   'a0000000-0000-0000-0000-000000000001',
@@ -47,7 +47,7 @@ INSERT INTO software (
   '["English","Afrikaans"]',
   'Sage Accounting Review 2026 — Pricing, Features & Alternatives',
   'In-depth Sage Accounting review for South African SMBs: pricing in ZAR, VAT features, pros and cons, and top alternatives.',
-  'published', TRUE
+  'published', TRUE, 'https://logo.clearbit.com/sage.com'
 ),
 (
   'a0000000-0000-0000-0000-000000000002',
@@ -67,7 +67,7 @@ INSERT INTO software (
   '["English"]',
   'Xero Review 2026 — Is It Right for South African Businesses?',
   'Xero review for SA businesses: USD pricing, features, integrations, and how it compares to Sage and QuickBooks.',
-  'published', TRUE
+  'published', TRUE, 'https://logo.clearbit.com/xero.com'
 ),
 (
   'a0000000-0000-0000-0000-000000000003',
@@ -87,7 +87,7 @@ INSERT INTO software (
   '["English"]',
   'QuickBooks Online Review 2026 — Pricing & Features for SA',
   'QuickBooks Online review for South African SMBs: local pricing, features, pros and cons, and the best alternatives.',
-  'published', TRUE
+  'published', TRUE, 'https://logo.clearbit.com/quickbooks.intuit.com'
 ),
 (
   'a0000000-0000-0000-0000-000000000004',
@@ -107,7 +107,7 @@ INSERT INTO software (
   '["English"]',
   'PaySpace Review 2026 — SA Payroll Software Tested',
   'PaySpace review: SARS-compliant cloud payroll for South African businesses. Pricing, features, pros & cons.',
-  'published', TRUE
+  'published', TRUE, 'https://logo.clearbit.com/payspace.com'
 ),
 (
   'a0000000-0000-0000-0000-000000000005',
@@ -127,7 +127,7 @@ INSERT INTO software (
   '["English"]',
   'SimplePay Review 2026 — Simple SA Payroll, Tested',
   'SimplePay review for South African employers: ZAR pricing, SARS compliance features, pros and cons, alternatives.',
-  'published', FALSE
+  'published', FALSE, 'https://logo.clearbit.com/simplepay.co.za'
 ),
 (
   'a0000000-0000-0000-0000-000000000006',
@@ -147,7 +147,7 @@ INSERT INTO software (
   '["English"]',
   'Zoho CRM Review 2026 — Best Value CRM for SA SMBs?',
   'Zoho CRM review for South African small businesses: free plan, pricing, automation features and alternatives.',
-  'published', TRUE
+  'published', TRUE, 'https://logo.clearbit.com/zoho.com'
 ),
 (
   'a0000000-0000-0000-0000-000000000007',
@@ -167,7 +167,7 @@ INSERT INTO software (
   '["English"]',
   'BambooHR Review 2026 — HR Software for Growing SA Teams',
   'BambooHR review: features, ZAR-equivalent pricing, pros and cons for South African HR teams, plus alternatives.',
-  'published', FALSE
+  'published', FALSE, 'https://logo.clearbit.com/bamboohr.com'
 ),
 (
   'a0000000-0000-0000-0000-000000000008',
@@ -187,7 +187,7 @@ INSERT INTO software (
   '["English","French","Dutch"]',
   'Odoo Review 2026 — The Modular ERP for SA SMBs',
   'Odoo review: modular open-source ERP for South African businesses. Free plan, pricing, modules and alternatives.',
-  'published', FALSE
+  'published', FALSE, 'https://logo.clearbit.com/odoo.com'
 );
 
 -- ----------------------------------------------------------------------------

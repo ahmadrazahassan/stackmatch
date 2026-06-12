@@ -9,7 +9,7 @@ import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
-import { deleteSoftware } from "../../actions";
+import { deleteSoftware, deleteSoftwareBulk } from "../../actions";
 import type { Software } from "@/lib/types";
 
 export function SoftwareTable({ data }: { data: Software[] }) {
@@ -111,6 +111,7 @@ export function SoftwareTable({ data }: { data: Software[] }) {
       columns={columns}
       data={data}
       searchPlaceholder="Search software…"
+      onDeleteSelected={deleteSoftwareBulk}
       toolbar={
         <Button asChild className="ml-auto">
           <Link href="/admin/software/new">+ Add New Software</Link>

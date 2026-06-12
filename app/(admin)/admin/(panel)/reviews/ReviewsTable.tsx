@@ -10,7 +10,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { formatDateShort } from "@/lib/utils/formatDate";
-import { deleteReview } from "../../actions";
+import { deleteReview, deleteReviewBulk } from "../../actions";
 import type { Review } from "@/lib/types";
 
 export function ReviewsTable({ data }: { data: Review[] }) {
@@ -96,6 +96,7 @@ export function ReviewsTable({ data }: { data: Review[] }) {
       columns={columns}
       data={data}
       searchPlaceholder="Search reviews…"
+      onDeleteSelected={deleteReviewBulk}
       toolbar={
         <Button asChild className="ml-auto">
           <Link href="/admin/reviews/new">+ Add New Review</Link>

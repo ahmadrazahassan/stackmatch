@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   ColumnDef,
   flexRender,
@@ -10,6 +11,7 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -21,13 +23,17 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { toast } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchPlaceholder?: string;
   toolbar?: React.ReactNode;
+  onDeleteSelected?: (ids: string[]) => Promise<{ ok: boolean; error?: string }>;
 }
 
 export function DataTable<TData, TValue>({
@@ -35,14 +41,49 @@ export function DataTable<TData, TValue>({
   data,
   searchPlaceholder = "Search…",
   toolbar,
+  onDeleteSelected,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Auto-inject a selection column if onDeleteSelected is provided
+  const tableColumns = useMemo(() => {
+    if (!onDeleteSelected) return columns;
+    const selectColumn: ColumnDef<TData, any> = {
+      id: "select",
+      header: ({ table }) => (
+        <div className="flex h-full items-center justify-center">
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex h-full items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    };
+    return [selectColumn, ...columns];
+  }, [columns, onDeleteSelected]);
 
   const table = useReactTable({
     data,
-    columns,
-    state: { sorting, globalFilter },
+    columns: tableColumns,
+    state: { sorting, globalFilter, rowSelection },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
@@ -52,18 +93,56 @@ export function DataTable<TData, TValue>({
     initialState: { pagination: { pageSize: 15 } },
   });
 
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+
+  const handleDeleteSelected = async () => {
+    if (!onDeleteSelected || selectedRows.length === 0) return;
+    setIsDeleting(true);
+    // Assuming each row data object has an 'id' property of type string
+    const ids = selectedRows.map((row) => (row.original as any).id as string).filter(Boolean);
+    try {
+      const result = await onDeleteSelected(ids);
+      if (result.ok) {
+        toast.success(`Successfully deleted ${ids.length} items.`);
+        setRowSelection({});
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to delete items.");
+      }
+    } catch (e) {
+      toast.error("An error occurred during deletion.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <Input
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          placeholder={searchPlaceholder}
-          className="max-w-xs bg-white"
-        />
-        {toolbar}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-1 items-center gap-3">
+          <Input
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            placeholder={searchPlaceholder}
+            className="max-w-xs bg-white"
+          />
+          {selectedRows.length > 0 && onDeleteSelected && (
+            <ConfirmDialog
+              trigger={
+                <Button variant="destructive" size="sm" disabled={isDeleting} className="shadow-sm">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete {selectedRows.length} Selected
+                </Button>
+              }
+              title={`Delete ${selectedRows.length} items?`}
+              description="This action cannot be undone. This will permanently delete the selected records and any associated data."
+              onConfirm={handleDeleteSelected}
+            />
+          )}
+        </div>
+        <div className="flex items-center gap-3">{toolbar}</div>
       </div>
-      <div className="rounded-lg border bg-white card-shadow">
+      <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -84,7 +163,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -94,7 +173,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                <TableCell colSpan={tableColumns.length} className="h-24 text-center text-muted-foreground">
                   No results.
                 </TableCell>
               </TableRow>

@@ -11,7 +11,7 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatDateShort } from "@/lib/utils/formatDate";
-import { deleteArticle } from "../../actions";
+import { deleteArticle, deleteArticleBulk } from "../../actions";
 import type { Article } from "@/lib/types";
 
 export function ArticlesTable({ data }: { data: Article[] }) {
@@ -99,6 +99,7 @@ export function ArticlesTable({ data }: { data: Article[] }) {
       columns={columns}
       data={data}
       searchPlaceholder="Search articles…"
+      onDeleteSelected={deleteArticleBulk}
       toolbar={
         <Button asChild className="ml-auto">
           <Link href="/admin/articles/new">+ Add New Article</Link>

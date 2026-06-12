@@ -40,6 +40,8 @@ export interface Software {
 
   features: string[];
   top_features: string[];
+  /** Optional — requires supabase/add_integrations.sql */
+  integrations?: string[];
 
   affiliate_url: string | null;
   vendor_website: string | null;

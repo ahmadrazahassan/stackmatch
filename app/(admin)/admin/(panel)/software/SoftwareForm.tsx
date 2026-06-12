@@ -65,6 +65,7 @@ export function SoftwareForm({
     pricing_plans: (initial?.pricing_plans as PricingPlan[]) ?? [],
     features: (initial?.features as string[]) ?? [],
     top_features: (initial?.top_features as string[]) ?? [],
+    integrations: (initial?.integrations as string[]) ?? [],
     affiliate_url: initial?.affiliate_url ?? "",
     vendor_website: initial?.vendor_website ?? "",
     vendor_name: initial?.vendor_name ?? "",
@@ -435,6 +436,14 @@ export function SoftwareForm({
               values={form.top_features}
               onChange={(v) => set("top_features", v)}
               max={3}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Integrations (shown on the profile page)</Label>
+            <TagInput
+              values={form.integrations}
+              onChange={(v) => set("integrations", v)}
+              placeholder="e.g. Stripe — press Enter"
             />
           </div>
         </CardContent>
