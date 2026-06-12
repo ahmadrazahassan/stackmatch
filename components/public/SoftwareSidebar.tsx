@@ -106,12 +106,12 @@ export function SoftwareSidebar({
 
       <div className="border-t border-dashed border-zinc-200 dark:border-zinc-800 my-4" />
 
-      <a
-        href={`mailto:${contactEmail ?? "hello@cloudpayza.com"}?subject=Review%20submission%2520for%2520${encodeURIComponent(software.name)}`}
+      <Link
+        href={`/software/${software.slug}/reviews/new`}
         className="inline-flex w-full items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 bg-white dark:bg-zinc-950 px-4 py-3 text-xs font-bold tracking-wider hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200 active:scale-[0.98] cursor-pointer font-sans"
       >
         WRITE A REVIEW
-      </a>
+      </Link>
 
       {compareWith && (
         <div className="pt-1 text-center">

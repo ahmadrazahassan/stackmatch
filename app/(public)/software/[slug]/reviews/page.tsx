@@ -132,12 +132,12 @@ export default async function SoftwareReviewsPage({
               </div>
             )}
 
-            <a
-              href={`mailto:${settings.contact_email ?? "hello@cloudpayza.com"}?subject=Review%20submission%20for%20${encodeURIComponent(software.name)}`}
+            <Link
+              href={`/software/${software.slug}/reviews/new`}
               className="mt-5 inline-flex w-full items-center justify-center rounded-md border border-brand px-4 py-2 text-sm font-semibold text-brand transition-colors hover:bg-brand-light"
             >
               Write a Review
-            </a>
+            </Link>
           </div>
         </div>
 

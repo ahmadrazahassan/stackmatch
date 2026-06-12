@@ -1122,13 +1122,13 @@ export default async function SoftwareOverviewPage({
           <div className="lg:col-span-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">Overall rating</h3>
-              <a
-                href={`mailto:${settings.contact_email ?? "hello@cloudpayza.com"}?subject=Review%20submission%20for%20${encodeURIComponent(software.name)}`}
+              <Link
+                href={`/software/${software.slug}/reviews/new`}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-2 hover:underline"
                 style={{ color: brandColor }}
               >
                 Write a review <Pencil className="h-3.5 w-3.5" />
-              </a>
+              </Link>
             </div>
             <div className="mt-3 flex items-center gap-2">
               <StarRating rating={Number(software.overall_rating)} size="lg" />
