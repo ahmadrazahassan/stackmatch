@@ -62,6 +62,14 @@ function percentAbove4(dist: Record<1 | 2 | 3 | 4 | 5, number>): number {
   return ((dist[4] + dist[5]) / total) * 100;
 }
 
+/**
+ * Editorial copy usually opens with its own "<h2>What is X?</h2>" — drop it
+ * so the page heading isn't duplicated.
+ */
+function stripLeadingHeading(html: string): string {
+  return html.replace(/^\s*<h[12][^>]*>[\s\S]*?<\/h[12]>/i, "");
+}
+
 function firstSentence(text: string, max = 90): string {
   const s = text.split(/(?<=[.!?])\s/)[0] ?? text;
   return s.length > max ? `${s.slice(0, max).trimEnd()}…` : s;
@@ -331,7 +339,7 @@ export default async function SoftwareOverviewPage({
               <SectionHeading>What is {software.name}?</SectionHeading>
               <div
                 className="prose-content mt-4"
-                dangerouslySetInnerHTML={{ __html: software.description_full }}
+                dangerouslySetInnerHTML={{ __html: stripLeadingHeading(software.description_full) }}
               />
               {screenshots.length > 0 && (
                 <div className="mt-6">
@@ -424,8 +432,12 @@ export default async function SoftwareOverviewPage({
                 <div className="mt-6 text-center">
                   <Link
                     href={`/compare/${software.slug}-vs-${compareWith.slug}`}
-                    className="inline-flex rounded-md px-6 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-md"
-                    style={{ backgroundColor: brandColor }}
+                    className="inline-flex rounded-xl border px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                    style={{
+                      backgroundColor: `${brandColor}E0`,
+                      borderColor: "rgba(255,255,255,0.25)",
+                      boxShadow: `0 8px 24px -6px ${brandColor}66, inset 0 1px 0 rgba(255,255,255,0.25)`,
+                    }}
                   >
                     View Full Comparison
                   </Link>
@@ -477,7 +489,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ ALTERNATIVES ============ */}
-      <section id="alternatives" className="mt-16 scroll-mt-32">
+      <section id="alternatives" className="reveal-on-scroll mt-16 scroll-mt-32">
         <div className="flex items-center justify-between">
           <SectionHeading>{software.name} alternatives</SectionHeading>
           <Link
@@ -542,8 +554,12 @@ export default async function SoftwareOverviewPage({
 
                   <Link
                     href={`/software/${alt.slug}`}
-                    className="mt-5 inline-flex w-full items-center justify-center rounded-md px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-md"
-                    style={{ backgroundColor: altColor }}
+                    className="mt-5 inline-flex w-full items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                    style={{
+                      backgroundColor: `${altColor}E0`,
+                      borderColor: "rgba(255,255,255,0.25)",
+                      boxShadow: `0 8px 24px -6px ${altColor}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+                    }}
                   >
                     Learn More
                   </Link>
@@ -555,7 +571,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ FAQs ============ */}
-      <section id="faqs" className="mt-16 scroll-mt-32">
+      <section id="faqs" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>FAQs about {software.name}</SectionHeading>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {faqs.map((f) => (
@@ -582,7 +598,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ USERS ============ */}
-      <section id="users" className="mt-16 scroll-mt-32">
+      <section id="users" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>Who uses {software.name}?</SectionHeading>
         <p className="mt-2 text-muted-foreground">Based on CloudPayZA reviews</p>
         {reviews.length === 0 ? (
@@ -670,7 +686,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ PROS AND CONS ============ */}
-      <section id="pros-cons" className="mt-16 scroll-mt-32">
+      <section id="pros-cons" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>Pros and Cons</SectionHeading>
         {!proReview && !conReview ? (
           <p className="mt-6 rounded-2xl border bg-white p-10 text-center text-muted-foreground card-shadow">
@@ -730,7 +746,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ FEATURES ============ */}
-      <section id="features" className="mt-16 scroll-mt-32">
+      <section id="features" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>Features</SectionHeading>
         <p className="mt-2 text-muted-foreground">
           The most important capabilities of {software.name}, as listed by the vendor.
@@ -767,7 +783,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ PRICING ============ */}
-      <section id="pricing" className="mt-16 scroll-mt-32">
+      <section id="pricing" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>Pricing</SectionHeading>
         <div className="mt-3 flex items-center gap-2 text-sm font-medium">
           {software.free_trial ? (
@@ -783,28 +799,75 @@ export default async function SoftwareOverviewPage({
         <div className="mt-5 grid gap-8 lg:grid-cols-12">
           <div className="lg:col-span-8">
             {(software.pricing_plans?.length ?? 0) > 0 ? (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {software.pricing_plans.map((plan, i) => (
-                  <div key={i} className="rounded-2xl border bg-white p-6 card-shadow">
-                    <h3 className="font-bold">{plan.name}</h3>
-                    <p className="mt-2 text-3xl font-extrabold">
-                      {Number(plan.price) === 0 ? "Free" : formatPrice(plan.price, plan.currency)}
-                    </p>
-                    <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                      per {plan.billing}
-                    </p>
-                    <div className="my-4 border-t" />
-                    <p className="text-sm font-semibold">It includes:</p>
-                    <ul className="mt-2 space-y-2">
-                      {plan.features.filter(Boolean).map((f, j) => (
-                        <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: brandColor }} />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {software.pricing_plans.map((plan, i) => {
+                  // Highlight the last (most capable) plan when there are 2+.
+                  const popular =
+                    software.pricing_plans.length > 1 &&
+                    i === software.pricing_plans.length - 1;
+                  return (
+                    <div
+                      key={i}
+                      className="group relative flex flex-col rounded-3xl border bg-white p-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
+                      style={
+                        popular
+                          ? {
+                              borderColor: `${brandColor}50`,
+                              boxShadow: `0 12px 40px -12px ${brandColor}35`,
+                              background: `linear-gradient(180deg, ${brandColor}08 0%, #ffffff 45%)`,
+                            }
+                          : undefined
+                      }
+                    >
+                      {popular && (
+                        <span
+                          className="absolute -top-3 left-7 inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-bold tracking-wide uppercase backdrop-blur-md"
+                          style={{
+                            backgroundColor: `${brandColor}E0`,
+                            borderColor: "rgba(255,255,255,0.3)",
+                            color: "#fff",
+                            boxShadow: `0 4px 14px -2px ${brandColor}60`,
+                          }}
+                        >
+                          Most popular
+                        </span>
+                      )}
+                      <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                        {plan.name}
+                      </p>
+                      <div className="mt-3 flex items-baseline gap-1.5">
+                        <span className="text-4xl font-extrabold tracking-tight">
+                          {Number(plan.price) === 0
+                            ? "Free"
+                            : formatPrice(plan.price, plan.currency)}
+                        </span>
+                        <span className="text-sm text-muted-foreground">/ {plan.billing}</span>
+                      </div>
+                      <div
+                        className="mt-5 h-px w-full"
+                        style={{
+                          background: `linear-gradient(90deg, ${brandColor}40, transparent)`,
+                        }}
+                      />
+                      <p className="mt-5 text-xs font-bold tracking-wide text-muted-foreground uppercase">
+                        It includes
+                      </p>
+                      <ul className="mt-3 flex-1 space-y-2.5">
+                        {plan.features.filter(Boolean).map((f, j) => (
+                          <li key={j} className="flex items-start gap-2.5 text-sm text-foreground/80">
+                            <span
+                              className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full"
+                              style={{ backgroundColor: `${brandColor}14` }}
+                            >
+                              <Check className="h-3 w-3" style={{ color: brandColor }} />
+                            </span>
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="rounded-2xl border bg-white p-7 card-shadow">
@@ -834,7 +897,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ INTEGRATIONS ============ */}
-      <section id="integrations" className="mt-16 scroll-mt-32">
+      <section id="integrations" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>Integrations</SectionHeading>
         {integrations.length > 0 ? (
           <div className="mt-6 flex flex-wrap gap-3">
@@ -856,7 +919,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ SUPPORT ============ */}
-      <section id="support" className="mt-16 scroll-mt-32">
+      <section id="support" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>Support, availability and typical users</SectionHeading>
         <div className="mt-6 grid gap-8 lg:grid-cols-12">
           <div className="grid gap-8 sm:grid-cols-2 lg:col-span-8 xl:grid-cols-3">
@@ -927,7 +990,7 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ USER REVIEWS ============ */}
-      <section id="reviews" className="mt-16 scroll-mt-32">
+      <section id="reviews" className="reveal-on-scroll mt-16 scroll-mt-32">
         <SectionHeading>User reviews</SectionHeading>
         <div className="mt-6 grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -995,8 +1058,12 @@ export default async function SoftwareOverviewPage({
               <div className="mt-6 text-center">
                 <Link
                   href={`/software/${software.slug}/reviews`}
-                  className="inline-flex rounded-md px-6 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-md"
-                  style={{ backgroundColor: brandColor }}
+                  className="inline-flex rounded-xl border px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    backgroundColor: `${brandColor}E0`,
+                    borderColor: "rgba(255,255,255,0.25)",
+                    boxShadow: `0 8px 24px -6px ${brandColor}66, inset 0 1px 0 rgba(255,255,255,0.25)`,
+                  }}
                 >
                   View all {software.review_count} reviews
                 </Link>
