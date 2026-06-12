@@ -12,7 +12,8 @@
       "Bash(npx shadcn@latest init -b radix -p nova -y)",
       "Bash(npx shadcn@latest add button card input label select textarea badge table tabs dialog alert-dialog dropdown-menu navigation-menu breadcrumb separator skeleton sonner progress avatar switch checkbox popover calendar -y)",
       "Bash(npm install *)",
-      "Bash(npx shadcn@latest add command scroll-area -y)"
+      "Bash(npx shadcn@latest add command scroll-area -y)",
+      "PowerShell(Remove-Item components\\\\ui\\\\calendar.tsx -Confirm:$false; Remove-Item -Recurse -Force .next; npx tsc --noEmit 2>&1 | Select-Object -First 40; \"EXIT: $LASTEXITCODE\")"
     ]
   }
 }
