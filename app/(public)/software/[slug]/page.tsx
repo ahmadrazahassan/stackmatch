@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Check, Minus, Plus, X, Globe, Headphones, Pencil, Puzzle } from "lucide-react";
+import { Check, Minus, Plus, X, Globe, Headphones, Pencil, Puzzle, Flame, ArrowUpRight } from "lucide-react";
 import {
   getAlternatives,
   getCategoryPeers,
@@ -19,6 +19,8 @@ import { SoftwareLogo } from "@/components/public/SoftwareLogo";
 import { CircularRating } from "@/components/public/CircularRating";
 import { DonutChart } from "@/components/public/DonutChart";
 import { ReviewCard } from "@/components/public/ReviewCard";
+import { FaqAccordion } from "@/components/public/FaqAccordion";
+import { FeaturesSection } from "@/components/public/FeaturesSection";
 import { softwareBrandColors } from "@/lib/brandColors";
 import { formatPrice, formatRating, reviewCountLabel } from "@/lib/utils/formatRating";
 import type { Review, Software } from "@/lib/types";
@@ -137,34 +139,45 @@ function PricingOptions({ software }: { software: Software }) {
 function QuoteCard({ review, positive }: { review: Review; positive: boolean }) {
   const quote = positive ? review.pros : review.cons;
   return (
-    <div className="rounded-xl bg-muted p-5">
+    <div className="rounded-[16px] bg-zinc-50/50 dark:bg-zinc-900/20 p-5">
       <div className="flex items-center gap-3">
-        <div className="relative">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-semibold text-muted-foreground">
+        <div className="relative shrink-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 font-semibold text-zinc-555 dark:text-zinc-405 text-sm">
             {review.reviewer_name.charAt(0)}
           </div>
           <span
-            className={`absolute -right-0.5 -bottom-0.5 flex h-4 w-4 items-center justify-center rounded-full ${positive ? "bg-success" : "bg-error"}`}
+            className={`absolute -right-0.5 -bottom-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full text-white ${positive ? "bg-emerald-500" : "bg-rose-500"}`}
           >
             {positive ? (
-              <Plus className="h-3 w-3 text-white" />
+              <Plus className="h-2 w-2 text-white" />
             ) : (
-              <Minus className="h-3 w-3 text-white" />
+              <Minus className="h-2 w-2 text-white" />
             )}
           </span>
         </div>
         <div className="min-w-0">
-          <p className="truncate font-semibold">{review.reviewer_name}</p>
-          <p className="truncate text-xs text-muted-foreground">
+          <p className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-50">{review.reviewer_name}</p>
+          <p className="truncate text-xs text-zinc-400 dark:text-zinc-555 font-medium">
             {[review.reviewer_job_title, review.reviewer_company_size && `${review.reviewer_company_size} employees`]
               .filter(Boolean)
               .join(", ")}
           </p>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6 text-foreground">&ldquo;{quote}&rdquo;</p>
+      <p className="mt-3 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 font-sans">&ldquo;{quote}&rdquo;</p>
     </div>
   );
+}
+
+function getFallbackDescription(name: string, index: number): string {
+  const lower = name.toLowerCase();
+  if (lower.includes("start") || lower.includes("lite") || lower.includes("free") || index === 0) {
+    return "Ideal for businesses ready to explore and get started with basic operations";
+  }
+  if (lower.includes("standard") || lower.includes("pro") || lower.includes("essential") || index === 1) {
+    return "Built for companies that want to gain an edge with advanced features and automation";
+  }
+  return "For businesses aiming to scale their operations with full capability and custom integration";
 }
 
 /* ----------------------------------- page ----------------------------------- */
@@ -186,7 +199,7 @@ export default async function SoftwareOverviewPage({
       getSiteSettings(),
       getRatingDistribution(software.id),
       getReviewsForSoftware(software.id, { perPage: 50, sort: "helpful" }),
-      getReviewsForSoftware(software.id, { perPage: 3, sort: "recent" }),
+      getReviewsForSoftware(software.id, { perPage: 30, sort: "recent" }),
     ]);
 
   const altDistributions = await Promise.all(
@@ -332,7 +345,7 @@ export default async function SoftwareOverviewPage({
       />
 
       {/* ============ DESCRIPTION + RIGHT RAIL ============ */}
-      <section id="description" className="scroll-mt-32">
+      <section id="description" className="reveal-on-scroll scroll-mt-32">
         <div className="grid gap-8 lg:grid-cols-12">
           <div className="space-y-10 lg:col-span-8">
             <div>
@@ -404,7 +417,7 @@ export default async function SoftwareOverviewPage({
                         </span>
                         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                           <div
-                            className="h-full rounded-full"
+                            className="h-full rounded-full animate-fill-bar"
                             style={{
                               width: `${(Number(software[key]) / 5) * 100}%`,
                               backgroundColor: brandColor,
@@ -418,7 +431,7 @@ export default async function SoftwareOverviewPage({
                       <div className="flex items-center gap-2">
                         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                           <div
-                            className="h-full rounded-full bg-navy"
+                            className="h-full rounded-full bg-navy animate-fill-bar"
                             style={{ width: `${(Number(compareWith[key]) / 5) * 100}%` }}
                           />
                         </div>
@@ -571,321 +584,326 @@ export default async function SoftwareOverviewPage({
       </section>
 
       {/* ============ FAQs ============ */}
-      <section id="faqs" className="reveal-on-scroll mt-16 scroll-mt-32">
-        <SectionHeading>FAQs about {software.name}</SectionHeading>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {faqs.map((f) => (
-            <details
-              key={f.q}
-              className="group self-start rounded-2xl border bg-white p-5 card-shadow open:shadow-md"
-            >
-              <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                <span
-                  className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold"
-                  style={{ backgroundColor: `${brandColor}12`, color: brandColor }}
-                >
-                  {f.tag}
-                </span>
-                <span className="mt-2 flex items-start justify-between gap-3">
-                  <span className="leading-6 font-semibold">{f.q}</span>
-                  <Plus className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-45" />
-                </span>
-              </summary>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{f.a}</p>
-            </details>
-          ))}
+      <section id="faqs" className="reveal-on-scroll mt-20 scroll-mt-32 border-t border-black/[0.06] dark:border-white/[0.06] pt-16">
+        <div className="grid gap-12 lg:grid-cols-12">
+          {/* Left Column: Heading and Support contacts */}
+          <div className="lg:col-span-5 flex flex-col justify-between py-1">
+            <div className="space-y-6">
+              <span
+                className="inline-flex items-center rounded-full border border-pink-500/20 bg-pink-500/5 px-3 py-1 text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400"
+              >
+                FAQ
+              </span>
+              <h2 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl font-heading leading-tight">
+                Frequently Asked<br />Questions
+              </h2>
+            </div>
+            
+            <div className="space-y-5 mt-12 lg:mt-0">
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-sans">
+                  Still have a question?
+                </h3>
+                <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-sans">
+                  <Link
+                    href="/contact"
+                    className="font-bold text-zinc-900 dark:text-zinc-50 hover:underline"
+                  >
+                    Contact us!
+                  </Link>{" "}
+                  We&apos;ll be happy to help you.
+                </p>
+              </div>
+              
+              {/* Overlapping support avatars */}
+              <div className="flex items-center">
+                <div className="flex -space-x-3">
+                  <img
+                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=120&h=120&q=80"
+                    alt="Support team member"
+                    className="h-12 w-12 rounded-full border-2 border-white dark:border-zinc-950 object-cover shadow-md"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80"
+                    alt="Support team member"
+                    className="h-12 w-12 rounded-full border-2 border-white dark:border-zinc-950 object-cover shadow-md"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80"
+                    alt="Support team member"
+                    className="h-12 w-12 rounded-full border-2 border-white dark:border-zinc-950 object-cover shadow-md"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Accordion */}
+          <div className="lg:col-span-7">
+            <FaqAccordion items={faqs} brandColor={brandColor} />
+          </div>
         </div>
       </section>
 
       {/* ============ USERS ============ */}
-      <section id="users" className="reveal-on-scroll mt-16 scroll-mt-32">
-        <SectionHeading>Who uses {software.name}?</SectionHeading>
-        <p className="mt-2 text-muted-foreground">Based on CloudPayZA reviews</p>
-        {reviews.length === 0 ? (
-          <p className="mt-6 rounded-2xl border bg-white p-10 text-center text-muted-foreground card-shadow">
-            User demographics will appear once reviews are published.
-          </p>
-        ) : (
-          <div className="mt-6 grid gap-5 lg:grid-cols-3">
-            {/* Company size */}
-            <div className="rounded-2xl border bg-white p-6 card-shadow">
-              <div className="flex items-baseline justify-between">
-                <h3 className="font-bold">Company size</h3>
-                <span className="text-xs text-muted-foreground">
-                  Based on {reviews.length} reviews
-                </span>
+      <section id="users" className="reveal-on-scroll mt-20 scroll-mt-32 border-t border-black/[0.06] dark:border-white/[0.06] pt-16">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase text-muted-foreground font-sans">
+              <span className="h-1.5 w-3.5" style={{ backgroundColor: brandColor }} />
+              USERS
+            </div>
+            <h2 className="text-3xl font-bold font-heading tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
+              Who uses {software.name}?
+            </h2>
+            <p className="text-sm text-muted-foreground leading-6">
+              Typical company sizes, industries, and job titles based on verified CloudPayZA reviews.
+            </p>
+          </div>
+          <div className="shrink-0 lg:w-72">
+            <SideRatingCard
+              software={software}
+              label="Ease of use"
+              value={Number(software.ease_of_use_rating)}
+              reviewCount={software.review_count}
+            />
+          </div>
+        </div>
+
+        <div className="mt-10">
+          {reviews.length === 0 ? (
+            <p className="rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-10 text-center text-zinc-500 dark:text-zinc-400 font-sans">
+              User demographics will appear once reviews are published.
+            </p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {/* Company size */}
+              <div className="rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-8 shadow-sm flex flex-col justify-between min-h-[320px]">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-550 text-lg">Company size</h3>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                    Based on {reviews.length} reviews
+                  </span>
+                </div>
+                <div className="mt-8 flex h-44 items-end justify-around gap-4">
+                  {Object.entries(sizeBuckets).map(([label, count]) => {
+                    const pct = sizeTotal ? Math.round((count / sizeTotal) * 100) : 0;
+                    return (
+                      <div key={label} className="flex h-full w-16 flex-col items-center justify-end gap-2">
+                        <span className="text-sm font-bold text-zinc-850 dark:text-zinc-150">{pct}%</span>
+                        <div
+                          className="w-7 rounded-t-full transition-all duration-500"
+                          style={{
+                            height: `${Math.max(4, pct)}%`,
+                            backgroundColor: count === Math.max(...Object.values(sizeBuckets)) ? brandColor : "var(--border)",
+                          }}
+                        />
+                        <span className="text-center text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 leading-4">
+                          {label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="mt-6 flex h-44 items-end justify-around gap-4">
-                {Object.entries(sizeBuckets).map(([label, count]) => {
-                  const pct = sizeTotal ? Math.round((count / sizeTotal) * 100) : 0;
-                  return (
-                    <div key={label} className="flex h-full w-16 flex-col items-center justify-end gap-2">
-                      <span className="text-sm font-bold">{pct}%</span>
-                      <div
-                        className="w-7 rounded-t-md"
-                        style={{
-                          height: `${Math.max(3, pct)}%`,
-                          backgroundColor: count === Math.max(...Object.values(sizeBuckets)) ? brandColor : "var(--color-border)",
-                        }}
-                      />
-                      <span className="text-center text-xs leading-4 text-muted-foreground">
-                        {label}
+
+              {/* Top job functions */}
+              <div className="rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-8 shadow-sm flex flex-col justify-between min-h-[320px]">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-550 text-lg">Top job functions</h3>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                    Based on {reviews.length} reviews
+                  </span>
+                </div>
+                {jobData.length > 0 ? (
+                  <div className="flex flex-col justify-between h-full pt-6">
+                    <div className="flex w-full items-center justify-between">
+                      <p className="text-base font-bold text-zinc-800 dark:text-zinc-150">{jobData[0].label}</p>
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                        style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
+                      >
+                        ↗ {topJobPct}%
                       </span>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Top job functions */}
-            <div className="rounded-2xl border bg-white p-6 card-shadow">
-              <div className="flex items-baseline justify-between">
-                <h3 className="font-bold">Top job functions</h3>
-                <span className="text-xs text-muted-foreground">
-                  Based on {reviews.length} reviews
-                </span>
-              </div>
-              {jobData.length > 0 ? (
-                <>
-                  <div className="mt-3 flex items-center justify-between">
-                    <p className="text-xl font-bold">{jobData[0].label}</p>
-                    <span
-                      className="rounded-md px-2 py-1 text-sm font-bold"
-                      style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
-                    >
-                      ↗ {topJobPct}%
-                    </span>
+                    <div className="mt-6">
+                      <DonutChart data={jobData} color={brandColor} size={110} />
+                    </div>
                   </div>
-                  <div className="mt-4">
-                    <DonutChart data={jobData} color={brandColor} size={130} />
-                  </div>
-                </>
-              ) : (
-                <p className="mt-4 text-sm text-muted-foreground">Not enough data yet.</p>
-              )}
-            </div>
-
-            {/* Top industries */}
-            <div className="rounded-2xl border bg-white p-6 card-shadow">
-              <div className="flex items-baseline justify-between">
-                <h3 className="font-bold">Top industries</h3>
-                <span className="text-xs text-muted-foreground">
-                  Based on {reviews.length} reviews
-                </span>
+                ) : (
+                  <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400 py-6 font-sans">Not enough data yet.</p>
+                )}
               </div>
-              {industryData.length > 0 ? (
-                <div className="mt-4">
-                  <DonutChart data={industryData} color={brandColor} size={130} />
+
+              {/* Top industries */}
+              <div className="rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-8 shadow-sm flex flex-col justify-between min-h-[320px]">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-550 text-lg">Top industries</h3>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                    Based on {reviews.length} reviews
+                  </span>
                 </div>
-              ) : (
-                <p className="mt-4 text-sm text-muted-foreground">Not enough data yet.</p>
-              )}
+                {industryData.length > 0 ? (
+                  <div className="flex flex-col justify-between h-full pt-6">
+                    <div className="w-full flex items-center justify-between">
+                      <p className="text-base font-bold text-zinc-800 dark:text-zinc-150">{industryData[0].label}</p>
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                        style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
+                      >
+                        Top Sector
+                      </span>
+                    </div>
+                    <div className="mt-6">
+                      <DonutChart data={industryData} color={brandColor} size={110} />
+                    </div>
+                  </div>
+                ) : (
+                  <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400 py-6 font-sans">Not enough data yet.</p>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </section>
 
       {/* ============ PROS AND CONS ============ */}
-      <section id="pros-cons" className="reveal-on-scroll mt-16 scroll-mt-32">
-        <SectionHeading>Pros and Cons</SectionHeading>
-        {!proReview && !conReview ? (
-          <p className="mt-6 rounded-2xl border bg-white p-10 text-center text-muted-foreground card-shadow">
-            Pros and cons will appear here once reviews are published.
-          </p>
-        ) : (
-          <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:divide-x lg:divide-border">
-            {proReview && (
-              <div className="lg:pr-10">
-                <h3 className="flex items-start gap-2.5 text-xl font-bold">
-                  <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-success">
-                    <Plus className="h-3 w-3 text-success" />
-                  </span>
-                  {firstSentence(proReview.pros as string)}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {positivePct}% positive reviews out of {totalRated}
-                </p>
-                {proReview.summary && (
-                  <p className="mt-3 leading-7 text-foreground">{proReview.summary}</p>
-                )}
-                <div className="mt-5">
-                  <QuoteCard review={proReview} positive />
-                </div>
-              </div>
-            )}
-            {conReview && (
-              <div>
-                <h3 className="flex items-start gap-2.5 text-xl font-bold">
-                  <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-error">
-                    <Minus className="h-3 w-3 text-error" />
-                  </span>
-                  {firstSentence(conReview.cons as string)}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {negativePct}% negative reviews out of {totalRated}
-                </p>
-                {conReview.summary && (
-                  <p className="mt-3 leading-7 text-foreground">{conReview.summary}</p>
-                )}
-                <div className="mt-5">
-                  <QuoteCard review={conReview} positive={false} />
-                </div>
-              </div>
-            )}
+      <section id="pros-cons" className="reveal-on-scroll mt-20 scroll-mt-32 border-t border-black/[0.06] dark:border-white/[0.06] pt-16">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase text-muted-foreground font-sans">
+              <span className="h-1.5 w-3.5" style={{ backgroundColor: brandColor }} />
+              PROS & CONS
+            </div>
+            <h2 className="text-3xl font-bold font-heading tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
+              Pros & Cons in Reviews
+            </h2>
+            <p className="text-sm text-muted-foreground leading-6">
+              Real advantages and drawbacks of {software.name} highlighted by verified users.
+            </p>
           </div>
-        )}
-        <div className="mt-8 text-center">
-          <Link
-            href={`/software/${software.slug}/reviews`}
-            className="text-sm font-semibold underline-offset-2 hover:underline"
-            style={{ color: brandColor }}
-          >
-            Expand to view all ↓
-          </Link>
+          <div className="shrink-0 lg:w-72">
+            <SideRatingCard
+              software={software}
+              label="Overall sentiment"
+              value={Number(software.overall_rating)}
+              reviewCount={software.review_count}
+            />
+          </div>
+        </div>
+
+        <div className="mt-10">
+          {!proReview && !conReview ? (
+            <p className="rounded-[20px] bg-white dark:bg-zinc-950 p-10 text-center text-zinc-500 dark:text-zinc-400 font-sans shadow-sm">
+              Pros and cons will appear here once reviews are published.
+            </p>
+          ) : (
+            <div>
+              <div className="grid gap-6 md:grid-cols-2">
+                {proReview && (
+                  <div className="rounded-[20px] bg-white dark:bg-zinc-950 p-8 shadow-sm flex flex-col h-full justify-between gap-6">
+                    <div className="space-y-4">
+                      <h3 className="flex items-start gap-3 text-xl font-semibold text-zinc-900 dark:text-zinc-50 leading-snug font-sans">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+                          <Plus className="h-3.5 w-3.5" />
+                        </span>
+                        {firstSentence(proReview.pros as string)}
+                      </h3>
+                      <p className="text-xs text-zinc-400 dark:text-zinc-555 font-medium font-sans">
+                        {positivePct}% positive reviews out of {totalRated}
+                      </p>
+                      {proReview.summary && (
+                        <p className="text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 font-sans">{proReview.summary}</p>
+                      )}
+                    </div>
+                    <div className="pt-2">
+                      <QuoteCard review={proReview} positive />
+                    </div>
+                  </div>
+                )}
+                {conReview && (
+                  <div className="rounded-[20px] bg-white dark:bg-zinc-950 p-8 shadow-sm flex flex-col h-full justify-between gap-6">
+                    <div className="space-y-4">
+                      <h3 className="flex items-start gap-3 text-xl font-semibold text-zinc-900 dark:text-zinc-50 leading-snug font-sans">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-455">
+                          <Minus className="h-3.5 w-3.5" />
+                        </span>
+                        {firstSentence(conReview.cons as string)}
+                      </h3>
+                      <p className="text-xs text-zinc-400 dark:text-zinc-555 font-medium font-sans">
+                        {negativePct}% negative reviews out of {totalRated}
+                      </p>
+                      {conReview.summary && (
+                        <p className="text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 font-sans">{conReview.summary}</p>
+                      )}
+                    </div>
+                    <div className="pt-2">
+                      <QuoteCard review={conReview} positive={false} />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="mt-8 text-center">
+                <Link
+                  href={`/software/${software.slug}/reviews`}
+                  className="text-xs font-bold uppercase tracking-wider underline underline-offset-4 hover:opacity-85 transition-opacity"
+                  style={{ color: brandColor }}
+                >
+                  Expand to view all &darr;
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* ============ FEATURES ============ */}
       <section id="features" className="reveal-on-scroll mt-16 scroll-mt-32">
-        <SectionHeading>Features</SectionHeading>
-        <p className="mt-2 text-muted-foreground">
-          The most important capabilities of {software.name}, as listed by the vendor.
-        </p>
-        <div className="mt-6 grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            {(software.features as string[]).length > 0 ? (
-              <ul className="grid gap-x-12 sm:grid-cols-2">
-                {(software.features as string[]).map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-center justify-between gap-3 border-b py-4 text-[15px] font-semibold"
-                  >
-                    {f}
-                    <Check className="h-4 w-4 shrink-0" style={{ color: brandColor }} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="rounded-2xl border bg-white p-10 text-center text-muted-foreground card-shadow">
-                Feature list coming soon.
-              </p>
-            )}
-          </div>
-          <div className="lg:col-span-4">
+        <FeaturesSection
+          slug={software.slug}
+          softwareName={software.name}
+          rawFeatures={software.features as string[]}
+          brandColor={brandColor}
+          sideCard={
             <SideRatingCard
               software={software}
               label="Features"
               value={Number(software.functionality_rating)}
               reviewCount={software.review_count}
             />
-          </div>
-        </div>
+          }
+        />
       </section>
 
       {/* ============ PRICING ============ */}
-      <section id="pricing" className="reveal-on-scroll mt-16 scroll-mt-32">
-        <SectionHeading>Pricing</SectionHeading>
-        <div className="mt-3 flex items-center gap-2 text-sm font-medium">
-          {software.free_trial ? (
-            <>
-              <Check className="h-4 w-4 text-success" /> Free Trial
-            </>
-          ) : (
-            <>
-              <X className="h-4 w-4 text-muted-foreground" /> No free trial
-            </>
-          )}
-        </div>
-        <div className="mt-5 grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            {(software.pricing_plans?.length ?? 0) > 0 ? (
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {software.pricing_plans.map((plan, i) => {
-                  // Highlight the last (most capable) plan when there are 2+.
-                  const popular =
-                    software.pricing_plans.length > 1 &&
-                    i === software.pricing_plans.length - 1;
-                  return (
-                    <div
-                      key={i}
-                      className="group relative flex flex-col rounded-3xl border bg-white p-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
-                      style={
-                        popular
-                          ? {
-                              borderColor: `${brandColor}50`,
-                              boxShadow: `0 12px 40px -12px ${brandColor}35`,
-                              background: `linear-gradient(180deg, ${brandColor}08 0%, #ffffff 45%)`,
-                            }
-                          : undefined
-                      }
-                    >
-                      {popular && (
-                        <span
-                          className="absolute -top-3 left-7 inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-bold tracking-wide uppercase backdrop-blur-md"
-                          style={{
-                            backgroundColor: `${brandColor}E0`,
-                            borderColor: "rgba(255,255,255,0.3)",
-                            color: "#fff",
-                            boxShadow: `0 4px 14px -2px ${brandColor}60`,
-                          }}
-                        >
-                          Most popular
-                        </span>
-                      )}
-                      <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-                        {plan.name}
-                      </p>
-                      <div className="mt-3 flex items-baseline gap-1.5">
-                        <span className="text-4xl font-extrabold tracking-tight">
-                          {Number(plan.price) === 0
-                            ? "Free"
-                            : formatPrice(plan.price, plan.currency)}
-                        </span>
-                        <span className="text-sm text-muted-foreground">/ {plan.billing}</span>
-                      </div>
-                      <div
-                        className="mt-5 h-px w-full"
-                        style={{
-                          background: `linear-gradient(90deg, ${brandColor}40, transparent)`,
-                        }}
-                      />
-                      <p className="mt-5 text-xs font-bold tracking-wide text-muted-foreground uppercase">
-                        It includes
-                      </p>
-                      <ul className="mt-3 flex-1 space-y-2.5">
-                        {plan.features.filter(Boolean).map((f, j) => (
-                          <li key={j} className="flex items-start gap-2.5 text-sm text-foreground/80">
-                            <span
-                              className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full"
-                              style={{ backgroundColor: `${brandColor}14` }}
-                            >
-                              <Check className="h-3 w-3" style={{ color: brandColor }} />
-                            </span>
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="rounded-2xl border bg-white p-7 card-shadow">
-                <p className="text-lg">
-                  Starting from{" "}
-                  <span className="font-extrabold" style={{ color: brandColor }}>
-                    {software.starting_price !== null
-                      ? formatPrice(software.starting_price, software.price_currency, software.billing_period)
-                      : "custom pricing"}
-                  </span>
-                </p>
-                <div className="mt-2">
-                  <PricingOptions software={software} />
-                </div>
-              </div>
-            )}
+      <section id="pricing" className="reveal-on-scroll mt-20 scroll-mt-32 border-t border-black/[0.06] dark:border-white/[0.06] pt-16">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase text-muted-foreground font-sans">
+              <span className="h-1.5 w-3.5" style={{ backgroundColor: brandColor }} />
+              PRICING PLANS
+            </div>
+            <h2 className="text-3xl font-bold font-heading tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
+              {software.name} Pricing
+            </h2>
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground pt-1">
+              {software.free_trial ? (
+                <span className="inline-flex items-center gap-1.5 text-success">
+                  <Check className="h-4 w-4" /> Free Trial Available
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                  <X className="h-4 w-4" /> No free trial
+                </span>
+              )}
+              {software.free_version && (
+                <span className="inline-flex items-center gap-1.5 text-success before:content-['•'] before:mr-2 before:text-muted-foreground">
+                  Free Version Available
+                </span>
+              )}
+            </div>
           </div>
-          <div className="lg:col-span-4">
+          <div className="shrink-0 lg:w-72">
             <SideRatingCard
               software={software}
               label="Value for money"
@@ -893,6 +911,125 @@ export default async function SoftwareOverviewPage({
               reviewCount={software.review_count}
             />
           </div>
+        </div>
+
+        <div className="mt-10 w-full">
+          {(software.pricing_plans?.length ?? 0) > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 w-full">
+              {software.pricing_plans.map((plan, i) => {
+                // Highlight the middle card when there are 3, or the second when there are 2.
+                const isPopular =
+                  software.pricing_plans.length > 1 &&
+                  (software.pricing_plans.length === 3 ? i === 1 : i === software.pricing_plans.length - 1);
+                return (
+                  <div
+                    key={i}
+                    className={`group relative flex flex-col rounded-[28px] border bg-zinc-50/40 dark:bg-zinc-900/10 p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${
+                      isPopular
+                        ? "border-zinc-350 dark:border-zinc-700 shadow-md shadow-zinc-250/25 bg-white dark:bg-zinc-950"
+                        : "border-zinc-200 dark:border-zinc-800 shadow-sm"
+                    }`}
+                  >
+                    {/* Card Header: Title and Popular Badge */}
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-heading">
+                        {plan.name}
+                      </h3>
+                      {isPopular && (
+                        <span
+                          className="inline-flex items-center gap-1 rounded-full bg-zinc-950 px-3 py-1 text-[11px] font-bold text-white shadow-md dark:bg-zinc-800"
+                        >
+                          <Flame className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0 mr-1" />
+                          Popular
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Price Section */}
+                    <div className="mt-4 flex items-baseline gap-1.5">
+                      <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 font-heading">
+                        {Number(plan.price) === 0
+                          ? "Free"
+                          : formatPrice(plan.price, plan.currency)}
+                      </span>
+                      <span className="text-sm font-medium text-zinc-400 dark:text-zinc-500">
+                        /{plan.billing}
+                      </span>
+                    </div>
+
+                    {/* Fallback Description */}
+                    <p className="mt-4 text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 font-sans min-h-[44px]">
+                      {getFallbackDescription(plan.name, i)}
+                    </p>
+
+                    {/* Call to Action Button */}
+                    <div className="mt-6">
+                      <Link
+                        href={software.affiliate_url ?? "#"}
+                        style={isPopular ? { backgroundColor: brandColor } : undefined}
+                        className={`w-full rounded-[16px] py-3.5 px-4 font-semibold flex items-center justify-center gap-1.5 transition-all text-sm font-sans cursor-pointer ${
+                          isPopular
+                            ? "text-white shadow-lg shadow-zinc-950/10 hover:opacity-90"
+                            : "bg-zinc-50/50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                        }`}
+                      >
+                        Get Started <ArrowUpRight className="h-4.5 w-4.5 shrink-0" />
+                      </Link>
+                    </div>
+
+                    {/* Dotted Divider */}
+                    <div className="border-t border-dotted border-zinc-300 dark:border-zinc-700 my-6" />
+
+                    {/* Features List */}
+                    <ul className="space-y-4 flex-1">
+                      {plan.features.filter(Boolean).map((feat, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-sm text-zinc-700 dark:text-zinc-300 font-sans leading-snug">
+                          <Check className="h-4 w-4 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5" />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-[28px] border border-zinc-200 dark:border-zinc-800 bg-zinc-50/40 dark:bg-zinc-900/10 p-8 shadow-sm max-w-md">
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-heading">
+                Standard Plan
+              </h3>
+              <div className="mt-4 flex items-baseline gap-1.5">
+                <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 font-heading">
+                  {software.starting_price !== null
+                    ? formatPrice(software.starting_price, software.price_currency)
+                    : "Custom"}
+                </span>
+                {software.starting_price !== null && (
+                  <span className="text-sm font-medium text-zinc-400 dark:text-zinc-505">
+                    /{software.billing_period}
+                  </span>
+                )}
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 font-sans">
+                Contact the vendor directly to get custom pricing options tailored to your business needs.
+              </p>
+              
+              <div className="mt-6">
+                <Link
+                  href={software.affiliate_url ?? "#"}
+                  className="w-full rounded-[16px] py-3.5 px-4 font-semibold flex items-center justify-center gap-1.5 transition-all text-sm font-sans bg-zinc-950 text-white shadow-lg shadow-zinc-950/25 hover:bg-zinc-900 dark:bg-zinc-50 dark:text-zinc-950 dark:shadow-none cursor-pointer"
+                >
+                  Contact Vendor <ArrowUpRight className="h-4.5 w-4.5 shrink-0" />
+                </Link>
+              </div>
+              
+              <div className="border-t border-dotted border-zinc-300 dark:border-zinc-700 my-6" />
+              
+              <div className="mt-3">
+                <PricingOptions software={software} />
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -1028,7 +1165,7 @@ export default async function SoftwareOverviewPage({
                     </span>
                     <span className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                       <span
-                        className="block h-full rounded-full"
+                        className="block h-full rounded-full animate-fill-bar"
                         style={{
                           width: `${(distribution[stars] / maxDist) * 100}%`,
                           backgroundColor: brandColor,
@@ -1039,6 +1176,39 @@ export default async function SoftwareOverviewPage({
                 </li>
               ))}
             </ul>
+
+            {/* Average Sub-ratings Breakdown (Framer inspired) */}
+            <div className="mt-8 border-t border-zinc-200/80 dark:border-zinc-800/80 pt-6 space-y-4">
+              <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 font-heading tracking-wider uppercase">
+                Average Ratings
+              </h4>
+              <div className="space-y-3.5">
+                {(
+                  [
+                    ["Ease of Use", software.ease_of_use_rating],
+                    ["Value for Money", software.value_for_money_rating],
+                    ["Customer Service", software.customer_service_rating],
+                    ["Functionality", software.functionality_rating],
+                  ] as const
+                ).map(([label, val]) => (
+                  <div key={label} className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="text-zinc-500 dark:text-zinc-400 font-sans">{label}</span>
+                      <span className="font-bold text-zinc-900 dark:text-zinc-50 font-sans">{formatRating(Number(val))}</span>
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800/80 overflow-hidden">
+                      <div
+                        className="h-full rounded-full animate-fill-bar"
+                        style={{
+                          width: `${(Number(val) / 5) * 100}%`,
+                          backgroundColor: brandColor,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="lg:col-span-8">
@@ -1050,7 +1220,7 @@ export default async function SoftwareOverviewPage({
             ) : (
               <div className="space-y-5">
                 {recentReviews.items.map((r) => (
-                  <ReviewCard key={r.id} review={r} vendorName={software.vendor_name} />
+                  <ReviewCard key={r.id} review={r} vendorName={software.vendor_name} brandColor={brandColor} />
                 ))}
               </div>
             )}

@@ -14,6 +14,7 @@ import { SentimentBar } from "@/components/public/SentimentBar";
 import { Pagination } from "@/components/public/Pagination";
 import { ReviewFilters } from "./ReviewFilters";
 import { formatRating } from "@/lib/utils/formatRating";
+import { softwareBrandColors } from "@/lib/brandColors";
 
 export const revalidate = 3600;
 
@@ -50,6 +51,8 @@ export default async function SoftwareReviewsPage({
   const sp = await searchParams;
   const software = await getSoftwareBySlug(slug);
   if (!software) notFound();
+
+  const brandColor = softwareBrandColors[software.slug] ?? "#00A86B";
 
   const page = Math.max(1, Number(sp.page) || 1);
   const [{ items: reviews, total }, distribution, settings] = await Promise.all([
@@ -152,7 +155,7 @@ export default async function SoftwareReviewsPage({
           ) : (
             <div className="space-y-5">
               {reviews.map((r) => (
-                <ReviewCard key={r.id} review={r} vendorName={software.vendor_name} />
+                <ReviewCard key={r.id} review={r} vendorName={software.vendor_name} brandColor={brandColor} />
               ))}
             </div>
           )}

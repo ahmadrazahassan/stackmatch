@@ -34,7 +34,7 @@ export function DonutChart({ data, color, size = 150 }: DonutChartProps) {
   });
 
   return (
-    <div className="flex flex-wrap items-center gap-6">
+    <div className="flex items-center gap-5 min-w-0 w-full">
       <svg width={size} height={size} className="-rotate-90 shrink-0">
         {segments.map((s) => (
           <circle
@@ -51,15 +51,15 @@ export function DonutChart({ data, color, size = 150 }: DonutChartProps) {
           />
         ))}
       </svg>
-      <ul className="min-w-0 flex-1 space-y-2.5">
+      <ul className="min-w-0 flex-1 space-y-2">
         {segments.map((s) => (
-          <li key={s.label} className="flex items-center gap-2.5 text-sm">
+          <li key={s.label} className="flex items-start gap-2 text-xs font-semibold">
             <span
-              className="h-2.5 w-2.5 shrink-0 rounded-full"
+              className="h-2 w-2 shrink-0 rounded-full mt-1.5"
               style={{ backgroundColor: color, opacity: s.opacity }}
             />
-            <span className="min-w-0 flex-1 truncate text-foreground">{s.label}</span>
-            <span className="font-bold">{s.pct}%</span>
+            <span className="min-w-0 flex-1 text-zinc-600 dark:text-zinc-300 leading-snug">{s.label}</span>
+            <span className="font-bold text-zinc-950 dark:text-zinc-50 shrink-0 ml-1">{s.pct}%</span>
           </li>
         ))}
       </ul>

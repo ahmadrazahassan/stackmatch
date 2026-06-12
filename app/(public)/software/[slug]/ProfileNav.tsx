@@ -18,7 +18,7 @@ interface ProfileNavProps {
   brandColor: string;
 }
 
-/** Sticky glass pill nav with scroll-spy for in-page anchors. */
+/** Sticky liquid iOS glassmorphic navbar with scroll-spy for in-page anchors. */
 export function ProfileNav({ items, brandColor }: ProfileNavProps) {
   const anchors = items.filter((i) => i.anchor).map((i) => i.anchor!.slice(1));
   const [activeId, setActiveId] = useState<string | null>(anchors[0] ?? null);
@@ -48,45 +48,48 @@ export function ProfileNav({ items, brandColor }: ProfileNavProps) {
   }, [items.map((i) => i.anchor).join(",")]);
 
   return (
-    <div className="sticky top-16 z-30 -mx-4 border-b border-border/60 bg-white/75 px-4 backdrop-blur-xl">
-      <nav
-        className="flex gap-1.5 overflow-x-auto py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        aria-label="Profile sections"
-      >
-        {items.map((item) => {
-          const isActive = item.anchor ? activeId === item.anchor.slice(1) : Boolean(item.active);
-          const pill = (
-            <span
-              className={cn(
-                "inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold whitespace-nowrap transition-all duration-300",
-                isActive
-                  ? "shadow-sm"
-                  : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-              style={
-                isActive
-                  ? {
-                      color: brandColor,
-                      backgroundColor: `${brandColor}12`,
-                      borderColor: `${brandColor}35`,
-                    }
-                  : undefined
-              }
-            >
-              {item.label}
-            </span>
-          );
-          return item.anchor ? (
-            <a key={item.label} href={item.anchor} className="shrink-0">
-              {pill}
-            </a>
-          ) : (
-            <Link key={item.label} href={item.href!} className="shrink-0">
-              {pill}
-            </Link>
-          );
-        })}
-      </nav>
+    <div className="sticky top-[76px] z-30 my-6 flex justify-center -mx-4 px-4 sm:mx-0">
+      <div className="inline-flex max-w-full items-center rounded-full border border-zinc-800 bg-zinc-950/85 p-1.5 shadow-xl shadow-black/30 backdrop-blur-md ring-1 ring-white/10">
+        <nav
+          className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-1.5 py-0.5"
+          aria-label="Profile sections"
+        >
+          {items.map((item) => {
+            const isActive = item.anchor ? activeId === item.anchor.slice(1) : Boolean(item.active);
+            const pill = (
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full px-4.5 py-2 text-xs sm:text-[13px] font-bold whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-95",
+                  isActive
+                    ? "text-white"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
+                )}
+                style={
+                  isActive
+                    ? {
+                        color: brandColor,
+                        backgroundColor: `${brandColor}20`,
+                        boxShadow: `inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 8px -1px ${brandColor}30`,
+                      }
+                    : undefined
+                }
+              >
+                {item.label}
+              </span>
+            );
+            return item.anchor ? (
+              <a key={item.label} href={item.anchor} className="shrink-0">
+                {pill}
+              </a>
+            ) : (
+              <Link key={item.label} href={item.href!} className="shrink-0">
+                {pill}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 }
+
