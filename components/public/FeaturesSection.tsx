@@ -140,6 +140,7 @@ export function FeaturesSection({ slug, softwareName, rawFeatures, brandColor, s
               type="text"
               placeholder="Search features"
               value={searchQuery}
+              suppressHydrationWarning
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 pl-10 pr-4 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 font-sans"
             />

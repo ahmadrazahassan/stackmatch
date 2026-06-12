@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,11 +9,22 @@ interface SearchBarProps {
   initialQuery?: string;
   size?: "default" | "lg";
   className?: string;
+  autoFocus?: boolean;
 }
 
-export function SearchBar({ initialQuery = "", size = "default", className }: SearchBarProps) {
+export function SearchBar({
+  initialQuery = "",
+  size = "default",
+  className,
+  autoFocus = false,
+}: SearchBarProps) {
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
 
   return (
     <form
@@ -33,6 +44,7 @@ export function SearchBar({ initialQuery = "", size = "default", className }: Se
       />
       <input
         type="search"
+        ref={inputRef}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search software, category, or keyword..."

@@ -18,6 +18,7 @@ import { SentimentBar } from "@/components/public/SentimentBar";
 import { SoftwareLogo } from "@/components/public/SoftwareLogo";
 import { CircularRating } from "@/components/public/CircularRating";
 import { DonutChart } from "@/components/public/DonutChart";
+import { CompanySizeChart } from "@/components/public/CompanySizeChart";
 import { ReviewCard } from "@/components/public/ReviewCard";
 import { FaqAccordion } from "@/components/public/FaqAccordion";
 import { FeaturesSection } from "@/components/public/FeaturesSection";
@@ -685,26 +686,14 @@ export default async function SoftwareOverviewPage({
                     Based on {reviews.length} reviews
                   </span>
                 </div>
-                <div className="mt-8 flex h-44 items-end justify-around gap-4">
-                  {Object.entries(sizeBuckets).map(([label, count]) => {
-                    const pct = sizeTotal ? Math.round((count / sizeTotal) * 100) : 0;
-                    return (
-                      <div key={label} className="flex h-full w-16 flex-col items-center justify-end gap-2">
-                        <span className="text-sm font-bold text-zinc-850 dark:text-zinc-150">{pct}%</span>
-                        <div
-                          className="w-7 rounded-t-full transition-all duration-500"
-                          style={{
-                            height: `${Math.max(4, pct)}%`,
-                            backgroundColor: count === Math.max(...Object.values(sizeBuckets)) ? brandColor : "var(--border)",
-                          }}
-                        />
-                        <span className="text-center text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-550 leading-4">
-                          {label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+                <CompanySizeChart
+                  data={Object.entries(sizeBuckets).map(([label, count]) => ({
+                    label,
+                    count,
+                    pct: sizeTotal ? Math.round((count / sizeTotal) * 100) : 0,
+                  }))}
+                  brandColor={brandColor}
+                />
               </div>
 
               {/* Top job functions */}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { SearchBar } from "@/components/public/SearchBar";
@@ -20,7 +20,7 @@ import {
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "CloudPayZA — Find the Right Business Software in South Africa",
+  title: "CloudPayZA â€” Find the Right Business Software in South Africa",
   description:
     "Discover verified reviews, expert comparisons, and unbiased ratings to make confident software decisions for your South African business.",
   alternates: { canonical: "/" },
@@ -185,7 +185,7 @@ export default async function HomePage() {
               <span className="h-1.5 w-3.5 bg-brand" />
               TOP RATED
             </div>
-            <h2 className="text-3xl font-normal font-serif tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-3xl font-bold font-heading tracking-tight text-foreground sm:text-4xl">
               Top Rated Software in South Africa
             </h2>
             <p className="text-sm text-muted-foreground leading-6">
@@ -216,7 +216,7 @@ export default async function HomePage() {
                 <span className="h-1.5 w-3.5 bg-brand" />
                 RECENT REVIEWS
               </div>
-              <h2 className="text-3xl font-normal font-serif tracking-tight text-foreground sm:text-4xl">
+              <h2 className="text-3xl font-bold font-heading tracking-tight text-foreground sm:text-4xl">
                 Recently Reviewed Software
               </h2>
               <p className="text-sm text-muted-foreground leading-6">
@@ -242,7 +242,7 @@ export default async function HomePage() {
                 <span className="h-1.5 w-3.5 bg-brand" />
                 BLOG &amp; GUIDES
               </div>
-              <h2 className="text-3xl font-normal font-serif tracking-tight text-foreground sm:text-4xl">
+              <h2 className="text-3xl font-bold font-heading tracking-tight text-foreground sm:text-4xl">
                 Expert Guides &amp; Reviews
               </h2>
               <p className="text-sm text-muted-foreground leading-6">
@@ -277,7 +277,7 @@ export default async function HomePage() {
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-4xl">📰</div>
+                      <div className="flex h-full items-center justify-center text-4xl">ðŸ“°</div>
                     )}
                   </div>
                   <div>
