@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Check, Globe, Headphones, X, Puzzle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { AffiliateCTAButton } from "./AffiliateCTAButton";
+import { AffiliateDisclosureNote } from "./AffiliateDisclosureNote";
 import { formatPrice } from "@/lib/utils/formatRating";
 import type { Software } from "@/lib/types";
 
@@ -30,6 +31,8 @@ export function SoftwareSidebar({
         size="lg"
         brandColor={color}
       />
+
+      <AffiliateDisclosureNote align="center" className="-mt-2 px-1" />
 
       <div className="rounded-xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/10 p-5 text-center font-sans">
         <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Starting from</p>

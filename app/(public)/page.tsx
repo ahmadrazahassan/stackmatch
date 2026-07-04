@@ -48,7 +48,7 @@ export default async function HomePage() {
     getLatestArticles(4),
   ]);
 
-  const yearsActive = settings.years_active || "7";
+  const yearsActive = settings.years_active || "4";
 
   const heroSoftware = featured.length > 0 ? featured : topRated;
 

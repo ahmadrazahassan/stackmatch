@@ -87,7 +87,7 @@ export function Footer({ categories, popularSoftware, settings }: FooterProps) {
 
             <p className="mt-7 max-w-xs text-[15px] leading-relaxed text-zinc-400">
               {settings.footer_tagline ??
-                "Independent reviews and side-by-side comparisons of the UK's best cloud, payments & accounting software."}
+                "Independent reviews and side-by-side comparisons of the UK's best business software."}
             </p>
 
             {socials.length > 0 && (

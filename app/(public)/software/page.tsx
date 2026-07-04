@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AffiliateDisclosureNote } from "@/components/public/AffiliateDisclosureNote";
 import { Breadcrumb } from "@/components/public/Breadcrumb";
 import { FilterSidebar } from "@/components/public/FilterSidebar";
 import { SoftwareListRow } from "@/components/public/SoftwareListRow";
@@ -37,6 +38,7 @@ export default async function SoftwareListingPage({
       <h1 className="py-4 text-2xl font-bold text-foreground sm:text-3xl">
         All Business Software
       </h1>
+      <AffiliateDisclosureNote className="-mt-1" />
 
       <div className="mt-2 grid gap-8 lg:grid-cols-[260px_1fr]">
         <div className="lg:sticky lg:top-20 lg:self-start">

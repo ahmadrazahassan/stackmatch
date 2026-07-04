@@ -7,6 +7,7 @@ import { ComparisonMatrix } from "@/components/public/ComparisonMatrix";
 import { PricingCards } from "@/components/public/PricingCards";
 import { RatingsBarChart, PriceBarChart, CategoryGauges, SentimentWaffle } from "@/components/public/CompareCharts";
 import { AffiliateCTAButton } from "@/components/public/AffiliateCTAButton";
+import { AffiliateDisclosureNote } from "@/components/public/AffiliateDisclosureNote";
 import { SoftwareLogo } from "@/components/public/SoftwareLogo";
 import { CompareStickyBar } from "@/components/public/CompareStickyBar";
 import {
@@ -293,6 +294,7 @@ export default async function ComparePage({
             research team and every review is moderated before publishing.
           </p>
           <p className="mt-6 text-[13px] font-medium text-zinc-400 dark:text-zinc-500">Updated {updated}</p>
+          <AffiliateDisclosureNote className="mt-3" />
         </div>
       </div>
 

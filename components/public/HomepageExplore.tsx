@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SoftwareLogo } from "./SoftwareLogo";
 import { GlossyButton } from "./GlossyButton";
+import { AffiliateDisclosureNote } from "./AffiliateDisclosureNote";
 import { formatPrice, formatRating } from "@/lib/utils/formatRating";
 import type { Category, Software } from "@/lib/types";
 import { brandColorFor } from "@/lib/brandColors";
@@ -187,6 +188,8 @@ export function HomepageExplore({ explorerData }: HomepageExploreProps) {
           />
         </div>
       )}
+
+      <AffiliateDisclosureNote align="center" className="mt-8" />
     </section>
   );
 }

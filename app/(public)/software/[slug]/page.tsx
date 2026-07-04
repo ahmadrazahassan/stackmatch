@@ -23,6 +23,7 @@ import { ReviewCard } from "@/components/public/ReviewCard";
 import { FaqAccordion } from "@/components/public/FaqAccordion";
 import { FeaturesSection } from "@/components/public/FeaturesSection";
 import { PricingCards } from "@/components/public/PricingCards";
+import { AffiliateDisclosureNote } from "@/components/public/AffiliateDisclosureNote";
 import { brandColorFor } from "@/lib/brandColors";
 import { integrationLogo } from "@/lib/integrationLogos";
 import { formatPrice, formatRating, reviewCountLabel } from "@/lib/utils/formatRating";
@@ -948,6 +949,7 @@ export default async function SoftwareOverviewPage({
 
         <div className="mt-10 w-full">
           <PricingCards cards={pricingCards} columns={3} />
+          <AffiliateDisclosureNote className="mt-5" />
         </div>
       </section>
 

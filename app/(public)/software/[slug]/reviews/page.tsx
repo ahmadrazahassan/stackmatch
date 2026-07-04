@@ -8,6 +8,7 @@ import {
   getSoftwareBySlug,
 } from "@/lib/supabase/queries";
 import { ProfileShell } from "../ProfileShell";
+import { AffiliateDisclosureNote } from "@/components/public/AffiliateDisclosureNote";
 import { ReviewCard } from "@/components/public/ReviewCard";
 import { StarRating } from "@/components/public/StarRating";
 import { SentimentBar } from "@/components/public/SentimentBar";
@@ -94,7 +95,8 @@ export default async function SoftwareReviewsPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
       />
-      <h2 className="mb-6 text-xl font-bold">Verified reviews for {software.name}</h2>
+      <h2 className="mb-2 text-xl font-bold">Verified reviews for {software.name}</h2>
+      <AffiliateDisclosureNote className="mb-6" />
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Left rating panel */}
         <div className="space-y-6 lg:col-span-3">
