@@ -118,7 +118,8 @@
       "Bash(rm -f favicon.ico icon.png)",
       "Bash(ls -1 icon.* favicon.*)",
       "Bash(curl -sS -m 15 -o /dev/null -w \"github:%{http_code}\\\\n\" https://github.com)",
-      "Bash(curl -sS -m 15 -o /dev/null -w \"freeagent:%{http_code}\\\\n\" https://www.freeagent.com)"
+      "Bash(curl -sS -m 15 -o /dev/null -w \"freeagent:%{http_code}\\\\n\" https://www.freeagent.com)",
+      "Bash(node supabase/load_uk_reviews.js)"
     ]
   }
 }
