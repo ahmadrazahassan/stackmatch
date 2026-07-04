@@ -64,7 +64,7 @@ export async function submitReview(
       reviewer_company: data.reviewer_company?.trim() || null,
       reviewer_industry: data.reviewer_industry || null,
       reviewer_company_size: data.reviewer_company_size || null,
-      reviewer_country: data.reviewer_country || "South Africa",
+      reviewer_country: data.reviewer_country || "United Kingdom",
       used_for_duration: data.used_for_duration || null,
       overall_rating: Math.round(data.overall_rating),
       ease_of_use: data.ease_of_use ? Math.round(data.ease_of_use) : null,

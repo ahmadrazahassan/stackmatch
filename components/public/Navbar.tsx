@@ -5,6 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Search, X } from "lucide-react";
 import { SearchBar } from "./SearchBar";
+import { GlossyButton } from "./GlossyButton";
+import { LogoMark } from "./BrandLogo";
+
+const LIST_CTA_COLOR = "#00A86B";
 
 const navLinks = [
   { href: "/software", label: "Software Reviews" },
@@ -78,8 +82,8 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
     <header
       className={`sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300 ${
         scrolled
-          ? "border-b border-black/[0.06] bg-white/80 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_8px_24px_-12px_rgba(16,24,40,0.12)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70"
-          : "border-b border-transparent bg-white"
+          ? "border-b border-black/[0.06] dark:border-white/[0.08] bg-white/80 dark:bg-zinc-950/80 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_8px_24px_-12px_rgba(16,24,40,0.12)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 dark:supports-[backdrop-filter]:bg-zinc-950/70"
+          : "border-b border-transparent bg-white dark:bg-zinc-950"
       }`}
     >
       <div
@@ -89,15 +93,11 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
       >
         <Link
           href="/"
-          className="group flex shrink-0 items-center gap-2 text-xl font-bold text-navy"
+          className="group flex shrink-0 items-center gap-2 text-xl font-bold text-navy dark:text-zinc-50"
         >
-          <img
-            src="/logo.png"
-            alt="CloudPayZA Logo"
-            className="h-8 w-8 object-contain transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-105"
-          />
+          <LogoMark className="h-8 w-8 transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-105" />
           <span>
-            CloudPay<span className="text-brand">ZA</span>
+            Stack <span className="text-brand">Match</span>
           </span>
         </Link>
 
@@ -113,7 +113,7 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
           {/* Sliding highlight — glides between links, rests on the active route */}
           <span
             aria-hidden
-            className={`absolute left-0 top-0 rounded-full bg-navy/[0.05] transition-[transform,width,height,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`absolute left-0 top-0 rounded-full bg-navy/[0.05] dark:bg-white/[0.08] transition-[transform,width,height,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               pillVisible ? "opacity-100" : "opacity-0"
             }`}
             style={
@@ -140,8 +140,8 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
                   setPillHot(true);
                   setPill(measure(link.href));
                 }}
-                className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-                  isActive ? "text-navy" : "text-muted-foreground hover:text-navy"
+                className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${
+                  isActive ? "text-navy dark:text-zinc-50" : "text-muted-foreground hover:text-navy dark:hover:text-zinc-50"
                 }`}
               >
                 {link.label}
@@ -156,18 +156,20 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
             aria-label="Search"
             aria-expanded={searchOpen}
             onClick={() => setSearchOpen((v) => !v)}
-            className={`flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:text-navy ${
-              searchOpen ? "bg-navy/[0.05] text-navy" : "hover:bg-navy/[0.05]"
+            className={`flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-all duration-200 hover:text-navy dark:hover:text-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${
+              searchOpen ? "bg-navy/[0.05] dark:bg-white/[0.08] text-navy dark:text-zinc-50" : "hover:bg-navy/[0.05] dark:hover:bg-white/[0.08]"
             }`}
           >
             <Search className="h-[18px] w-[18px]" />
           </button>
-          <a
-            href={`mailto:${contactEmail ?? "hello@cloudpayza.com"}?subject=List%20Your%20Software%20on%20CloudPayZA`}
-            className="hidden rounded-full bg-amber px-4 py-2 text-sm font-semibold text-navy shadow-[0_1px_2px_rgba(245,166,35,0.4),inset_0_1px_0_rgba(255,255,255,0.35)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-amber-dark hover:shadow-[0_4px_12px_-2px_rgba(245,166,35,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] active:scale-[0.97] sm:inline-flex"
-          >
-            List Your Software
-          </a>
+          <GlossyButton
+            href={`mailto:${contactEmail ?? "hello@stackmatch.uk"}?subject=List%20Your%20Software%20on%20Stack%20Match`}
+            label="List Your Software"
+            variant="brand"
+            brandColor={LIST_CTA_COLOR}
+            fullWidth={false}
+            className="hidden sm:inline-flex"
+          />
           <button
             type="button"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -176,7 +178,7 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
               setMobileOpen((v) => !v);
               setSearchOpen(false);
             }}
-            className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted lg:hidden"
+            className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted dark:hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 lg:hidden"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -190,7 +192,7 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="border-t border-black/[0.06] py-3">
+          <div className="border-t border-black/[0.06] dark:border-white/[0.08] py-3">
             <div className="container-site">
               <SearchBar autoFocus={searchOpen} />
             </div>
@@ -205,7 +207,7 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
         }`}
       >
         <div className="overflow-hidden">
-          <nav className="border-t border-black/[0.06] py-2" aria-label="Mobile">
+          <nav className="border-t border-black/[0.06] dark:border-white/[0.08] py-3" aria-label="Mobile">
             <div className="container-site flex flex-col">
               {navLinks.map((link, i) => {
                 const isActive = link.href === activeHref;
@@ -215,23 +217,27 @@ export function Navbar({ contactEmail }: { contactEmail?: string }) {
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
                     style={{ transitionDelay: mobileOpen ? `${i * 40}ms` : "0ms" }}
-                    className={`border-b border-border/60 py-3 text-sm font-medium transition-[opacity,transform] duration-300 last:border-0 ${
-                      isActive ? "text-navy" : "text-muted-foreground"
+                    className={`border-b border-border/60 dark:border-white/[0.06] py-3 text-sm font-medium transition-[opacity,transform] duration-300 last:border-0 ${
+                      isActive ? "text-navy dark:text-zinc-50" : "text-muted-foreground"
                     } ${mobileOpen ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"}`}
                   >
                     {link.label}
                   </Link>
                 );
               })}
-              <a
-                href={`mailto:${contactEmail ?? "hello@cloudpayza.com"}`}
+              <div
                 style={{ transitionDelay: mobileOpen ? `${navLinks.length * 40}ms` : "0ms" }}
-                className={`py-3 text-sm font-semibold text-amber-dark transition-[opacity,transform] duration-300 ${
+                className={`pt-4 transition-[opacity,transform] duration-300 ${
                   mobileOpen ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
                 }`}
               >
-                List Your Software
-              </a>
+                <GlossyButton
+                  href={`mailto:${contactEmail ?? "hello@stackmatch.uk"}?subject=List%20Your%20Software%20on%20Stack%20Match`}
+                  label="List Your Software"
+                  variant="brand"
+                  brandColor={LIST_CTA_COLOR}
+                />
+              </div>
             </div>
           </nav>
         </div>

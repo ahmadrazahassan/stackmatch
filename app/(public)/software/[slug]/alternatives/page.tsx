@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!software) return { title: "Software Not Found" };
   return {
     title: `Best ${software.name} Alternatives ${new Date().getFullYear()}`,
-    description: `Looking for a ${software.name} alternative? Compare the top competitors on pricing, ratings and features for South African businesses.`,
+    description: `Looking for a ${software.name} alternative? Compare the top competitors on pricing, ratings and features for UK businesses.`,
     alternates: { canonical: `/software/${software.slug}/alternatives` },
   };
 }
@@ -108,14 +108,14 @@ export default async function SoftwareAlternativesPage({
                 <div className="rounded-lg border bg-white p-6 card-shadow">
                   <div className="grid grid-cols-3 items-center pb-4">
                     <div className="flex flex-col items-center gap-2">
-                      <SoftwareLogo src={software.logo_url} name={software.name} size={56} />
+                      <SoftwareLogo src={software.logo_url} name={software.name} size={64} />
                       <span className="text-center font-bold">{software.name}</span>
                     </div>
                     <span className="text-center text-2xl font-extrabold text-muted-foreground">
                       VS
                     </span>
                     <div className="flex flex-col items-center gap-2">
-                      <SoftwareLogo src={top.logo_url} name={top.name} size={56} />
+                      <SoftwareLogo src={top.logo_url} name={top.name} size={64} />
                       <span className="text-center font-bold">{top.name}</span>
                     </div>
                   </div>

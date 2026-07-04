@@ -13,8 +13,8 @@ export async function generateMetadata({
   const software = await getSoftwareBySlug(slug);
   if (!software) return { title: "Software Not Found" };
   return {
-    title: `Write a Review for ${software.name} — CloudPayZA`,
-    description: `Submit your verified review and share your experience with ${software.name} for South African businesses.`,
+    title: `Write a Review for ${software.name} — Stack Match`,
+    description: `Submit your verified review and share your experience with ${software.name} for UK businesses.`,
     alternates: { canonical: `/software/${software.slug}/reviews/new` },
   };
 }

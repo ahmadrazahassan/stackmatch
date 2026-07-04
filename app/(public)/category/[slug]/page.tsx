@@ -26,10 +26,10 @@ export async function generateMetadata({
   const category = await getCategoryBySlug(slug);
   if (!category) return { title: "Category Not Found" };
   return {
-    title: `Best ${category.name} in South Africa ${new Date().getFullYear()}`,
+    title: `Best ${category.name} in the UK ${new Date().getFullYear()}`,
     description:
       category.description ??
-      `Compare the best ${category.name.toLowerCase()} for South African businesses. Verified reviews, ZAR pricing and expert ratings.`,
+      `Compare the best ${category.name.toLowerCase()} for UK businesses. Verified reviews, GBP pricing and expert ratings.`,
     alternates: { canonical: `/category/${category.slug}` },
   };
 }

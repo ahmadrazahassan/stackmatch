@@ -1,5 +1,5 @@
 -- ============================================================================
--- CloudPayZA — Database schema
+-- Stackmatch — Database schema
 -- Run this in the Supabase SQL Editor (Dashboard → SQL Editor → New query).
 -- Safe to run once on a fresh project.
 -- ============================================================================
@@ -391,13 +391,13 @@ CREATE POLICY "Admin delete media" ON storage.objects
 -- ============================================================================
 
 INSERT INTO site_settings (key, value) VALUES
-  ('site_name', 'CloudPayZA'),
-  ('tagline', 'South Africa''s #1 Business Software Reviews Platform'),
-  ('contact_email', 'hello@cloudpayza.com'),
+  ('site_name', 'Stackmatch'),
+  ('tagline', 'The UK''s #1 Business Software Reviews Platform'),
+  ('contact_email', 'hello@stackmatch.uk'),
   ('social_twitter', ''),
   ('social_linkedin', ''),
   ('social_facebook', ''),
-  ('footer_text', 'CloudPayZA helps South African businesses find the right software through verified reviews and expert comparisons.'),
+  ('footer_text', 'Stackmatch helps UK businesses find the right software through verified reviews and expert comparisons.'),
   ('ga_tracking_id', ''),
   ('items_per_page', '10')
 ON CONFLICT (key) DO NOTHING;

@@ -12,17 +12,18 @@ const CURRENCY_PREFIX: Record<string, string> = {
 
 export function formatPrice(
   price: number | string | null | undefined,
-  currency = "ZAR",
+  currency = "GBP",
   billingPeriod?: string | null
 ): string {
   if (price === null || price === undefined || price === "") return "Contact vendor";
-  const prefix = CURRENCY_PREFIX[currency] ?? `${currency} `;
   const num = typeof price === "string" ? Number(price) : price;
+  if (num === 0) return "Free";
+  const prefix = CURRENCY_PREFIX[currency] ?? `${currency} `;
   const amount = Number.isInteger(num) ? num.toString() : num.toFixed(2);
   const period = billingPeriod ? `/${billingPeriod === "month" ? "mo" : billingPeriod === "year" ? "yr" : billingPeriod}` : "";
   return `${prefix}${amount}${period}`;
 }
 
 export function reviewCountLabel(count: number): string {
-  return `${count.toLocaleString("en-ZA")} review${count === 1 ? "" : "s"}`;
+  return `${count.toLocaleString("en-GB")} review${count === 1 ? "" : "s"}`;
 }

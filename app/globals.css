@@ -42,7 +42,7 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  /* CloudPayZA brand tokens */
+  /* Stackmatch brand tokens */
   --color-brand: #00a86b;
   --color-brand-dark: #008f5b;
   --color-brand-light: #e6f7f0;
@@ -178,6 +178,79 @@
   }
   .prose-content blockquote {
     @apply my-4 border-l-4 border-brand pl-4 text-muted-foreground italic;
+  }
+
+  /* ---- Legal / policy page content ---- */
+  .legal-content > p {
+    @apply text-[15.5px] leading-8 text-zinc-600 dark:text-zinc-300 mb-5;
+  }
+  .legal-content > p:last-child {
+    @apply mb-0;
+  }
+  .legal-content h3 {
+    @apply mt-9 mb-3 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50 font-heading;
+  }
+  .legal-content ul {
+    @apply mb-6 space-y-2.5 pl-0;
+  }
+  .legal-content ul > li {
+    @apply relative pl-6 text-[15.5px] leading-7 text-zinc-600 dark:text-zinc-300;
+  }
+  .legal-content ul > li::before {
+    content: "";
+    @apply absolute left-0 top-[0.62rem] h-1.5 w-1.5 rounded-full bg-brand;
+  }
+  .legal-content a {
+    @apply font-medium text-brand underline decoration-brand/30 underline-offset-2 transition-colors hover:decoration-brand;
+  }
+  .legal-content strong {
+    @apply font-semibold text-zinc-900 dark:text-zinc-100;
+  }
+
+  /* ---- Long-form article body ---- */
+  .article-content p {
+    @apply text-[17px] leading-[1.85] text-zinc-700 dark:text-zinc-300 mb-7;
+  }
+  .article-content > p:first-of-type {
+    @apply text-[19px] leading-[1.75] text-zinc-800 dark:text-zinc-200;
+  }
+  .article-content h2 {
+    @apply mt-14 mb-5 text-[1.7rem] font-semibold leading-tight tracking-tight text-zinc-900 dark:text-zinc-50 font-heading scroll-mt-28;
+  }
+  .article-content h3 {
+    @apply mt-11 mb-4 text-[1.3rem] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 font-heading;
+  }
+  .article-content ul,
+  .article-content ol {
+    @apply mb-8 space-y-3 pl-0;
+  }
+  .article-content ul > li {
+    @apply relative pl-7 text-[17px] leading-[1.75] text-zinc-700 dark:text-zinc-300;
+  }
+  .article-content ul > li::before {
+    content: "";
+    @apply absolute left-0.5 top-[0.75rem] h-1.5 w-1.5 rounded-full bg-brand;
+  }
+  .article-content ol {
+    @apply list-decimal pl-6;
+  }
+  .article-content ol > li {
+    @apply pl-2 text-[17px] leading-[1.75] text-zinc-700 dark:text-zinc-300 marker:font-semibold marker:text-brand;
+  }
+  .article-content a {
+    @apply font-medium text-brand underline decoration-brand/30 underline-offset-[3px] transition-colors hover:decoration-brand;
+  }
+  .article-content strong {
+    @apply font-semibold text-zinc-900 dark:text-zinc-50;
+  }
+  .article-content blockquote {
+    @apply my-9 border-l-2 border-brand pl-6 text-[19px] font-medium italic leading-[1.7] text-zinc-800 dark:text-zinc-200;
+  }
+  .article-content img {
+    @apply my-9 w-full rounded-2xl border border-zinc-200 dark:border-zinc-800;
+  }
+  .article-content hr {
+    @apply my-12 border-zinc-200 dark:border-zinc-800;
   }
 }
 

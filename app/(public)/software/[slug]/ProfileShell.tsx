@@ -4,7 +4,7 @@ import { Breadcrumb } from "@/components/public/Breadcrumb";
 import { StarRating } from "@/components/public/StarRating";
 import { SoftwareLogo } from "@/components/public/SoftwareLogo";
 import { formatRating, reviewCountLabel } from "@/lib/utils/formatRating";
-import { softwareBrandColors } from "@/lib/brandColors";
+import { brandColorFor } from "@/lib/brandColors";
 import { ProfileNav, type ProfileNavItem } from "./ProfileNav";
 import type { Software } from "@/lib/types";
 
@@ -32,7 +32,7 @@ export function ProfileShell({
   children: React.ReactNode;
 }) {
   const base = `/software/${software.slug}`;
-  const brandColor = softwareBrandColors[software.slug] ?? "#00A86B";
+  const brandColor = brandColorFor(software);
 
   const navItems: ProfileNavItem[] =
     activeTab === "overview"
@@ -58,7 +58,7 @@ export function ProfileShell({
         <SoftwareLogo
           src={software.logo_url}
           name={software.name}
-          size={84}
+          size={100}
           className="shadow-sm"
         />
         <div className="min-w-0 flex-1">

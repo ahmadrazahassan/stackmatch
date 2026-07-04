@@ -9,17 +9,18 @@ import type { Software } from "@/lib/types";
 import { softwareBrandColors } from "@/lib/brandColors";
 
 export function SoftwareListRow({ software }: { software: Software }) {
-  const brandColor = softwareBrandColors[software.slug];
+  // Left undefined when unset so the CSS-var fallbacks below apply.
+  const brandColor = software.brand_color || softwareBrandColors[software.slug];
   
   return (
     <div 
       className="group flex flex-col gap-5 rounded-xl border bg-white p-6 card-shadow transition-all hover:-translate-y-1 hover:shadow-xl md:flex-row relative overflow-hidden"
     >
-      <SoftwareLogo src={software.logo_url} name={software.name} size={80} className="hidden md:block" />
+      <SoftwareLogo src={software.logo_url} name={software.name} size={96} className="hidden md:block" />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-3 md:hidden">
-          <SoftwareLogo src={software.logo_url} name={software.name} size={56} />
+          <SoftwareLogo src={software.logo_url} name={software.name} size={64} />
           <Link href={`/software/${software.slug}`}>
             <h3 className="text-lg font-bold text-foreground hover:text-brand">{software.name}</h3>
           </Link>

@@ -6,12 +6,15 @@ import { SoftwareCard } from "@/components/public/SoftwareCard";
 import { CategoryCard } from "@/components/public/CategoryCard";
 import { HomepageExplore } from "@/components/public/HomepageExplore";
 import { HomepageCompare } from "@/components/public/HomepageCompare";
+import { NewsletterSection } from "@/components/public/NewsletterSection";
+import { GlossyButton } from "@/components/public/GlossyButton";
 import { formatDateShort } from "@/lib/utils/formatDate";
 import {
   getCategories,
   getFeaturedSoftware,
   getLatestArticles,
   getRecentlyUpdatedSoftware,
+  getSiteSettings,
   getSiteStats,
   getTopRatedSoftware,
   getSoftwareList,
@@ -20,9 +23,9 @@ import {
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "CloudPayZA â€” Find the Right Business Software in South Africa",
+  title: "Stack Match — Find the Right Business Software in the UK",
   description:
-    "Discover verified reviews, expert comparisons, and unbiased ratings to make confident software decisions for your South African business.",
+    "Discover verified reviews, expert comparisons, and unbiased ratings to make confident software decisions for your UK business.",
   alternates: { canonical: "/" },
 };
 
@@ -35,14 +38,17 @@ const popularTags = [
 ];
 
 export default async function HomePage() {
-  const [stats, categories, featured, topRated, recent, articles] = await Promise.all([
+  const [stats, settings, categories, featured, topRated, recent, articles] = await Promise.all([
     getSiteStats(),
+    getSiteSettings(),
     getCategories(8),
     getFeaturedSoftware(4),
     getTopRatedSoftware(4),
     getRecentlyUpdatedSoftware(4),
     getLatestArticles(4),
   ]);
+
+  const yearsActive = settings.years_active || "7";
 
   const heroSoftware = featured.length > 0 ? featured : topRated;
 
@@ -141,12 +147,20 @@ export default async function HomePage() {
           </div>
 
           {/* Stats Bar card below the hero card */}
-          <div className="mt-8 rounded-[24px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2 shadow-sm">
-            <div className="grid grid-cols-1 divide-y divide-dashed divide-zinc-200 dark:divide-zinc-800 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="mt-8 rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.22)]">
+            <div className="grid grid-cols-1 divide-y divide-zinc-100 dark:divide-zinc-800 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               {[
-                { value: "50k", label: "Verified Reviews", img: "/Random/B0V3gNPI0mHpDUqWHR41pDhDfMs.png" },
-                { value: "50k+", label: "Users Yearly", img: "/Random/CoAe1eW9S1x6kWgYfFZw038Bw.png" },
-                { value: "7 Years", label: "Years of Advice", img: "/Random/QBkCPoeejpECqrXOviZdvDrmKws.png" },
+                {
+                  value: stats.reviews > 0 ? stats.reviews.toLocaleString("en-GB") : "0",
+                  label: "Verified Reviews",
+                  img: "/Random/B0V3gNPI0mHpDUqWHR41pDhDfMs.png",
+                },
+                {
+                  value: stats.software > 0 ? `${stats.software.toLocaleString("en-GB")}+` : "0",
+                  label: "Software Listed",
+                  img: "/Random/CoAe1eW9S1x6kWgYfFZw038Bw.png",
+                },
+                { value: `${yearsActive} Years`, label: "Years of Advice", img: "/Random/QBkCPoeejpECqrXOviZdvDrmKws.png" },
               ].map((s, idx) => (
                 <div key={s.label} className="flex items-center justify-center gap-4 py-6 px-6 sm:px-0">
                   <div className={`relative w-12 h-12 shrink-0 ${idx % 2 === 0 ? "animate-float" : "animate-float-delayed"}`}>
@@ -186,10 +200,10 @@ export default async function HomePage() {
               TOP RATED
             </div>
             <h2 className="text-3xl font-bold font-heading tracking-tight text-foreground sm:text-4xl">
-              Top Rated Software in South Africa
+              Top Rated Software in the UK
             </h2>
             <p className="text-sm text-muted-foreground leading-6">
-              The highest-rated business software solutions as rated by verified South African business owners and managers.
+              The highest-rated business software solutions as rated by verified UK business owners and managers.
             </p>
           </div>
         </div>
@@ -207,6 +221,9 @@ export default async function HomePage() {
         )}
       </section>
 
+      {/* Newsletter — roughly the midpoint of the homepage */}
+      <NewsletterSection />
+
       {/* Recently reviewed */}
       {recent.length > 0 && (
         <section id="recent-reviews" className="container-site py-20 border-t border-dashed border-zinc-200 dark:border-zinc-800">
@@ -220,7 +237,7 @@ export default async function HomePage() {
                 Recently Reviewed Software
               </h2>
               <p className="text-sm text-muted-foreground leading-6">
-                See the software applications that were recently evaluated by South African business users.
+                See the software applications that were recently evaluated by UK business users.
               </p>
             </div>
           </div>
@@ -250,12 +267,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="shrink-0">
-              <Link
-                href="/blog"
-                className="inline-flex items-center justify-center rounded-full border border-dashed border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 bg-white dark:bg-zinc-950 px-6 py-2.5 text-xs font-bold tracking-wider hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200 active:scale-[0.98] font-sans"
-              >
-                VIEW ALL ARTICLES
-              </Link>
+              <GlossyButton href="/blog" label="View all articles" variant="neutral" fullWidth={false} />
             </div>
           </div>
 
@@ -264,7 +276,7 @@ export default async function HomePage() {
               <Link
                 key={a.id}
                 href={`/blog/${a.slug}`}
-                className="group flex flex-col justify-between rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 shadow-sm transition-all duration-350 hover:-translate-y-0.5 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-md h-full font-sans"
+                className="group flex h-full flex-col justify-between rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 font-sans shadow-[0_10px_30px_-18px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_44px_-22px_rgba(0,0,0,0.28)]"
               >
                 <div className="space-y-4">
                   <div className="relative aspect-video w-full overflow-hidden rounded-[16px] border bg-muted">
@@ -294,7 +306,7 @@ export default async function HomePage() {
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t border-dashed border-zinc-150 dark:border-zinc-800 flex items-center justify-between text-[11px] text-zinc-400 dark:text-zinc-500 font-medium">
+                <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-[11px] text-zinc-400 dark:text-zinc-500 font-medium">
                   <span>By {a.author_name}</span>
                   <span>{formatDateShort(a.published_date)}</span>
                 </div>

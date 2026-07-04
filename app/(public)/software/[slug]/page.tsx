@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Check, Minus, Plus, X, Globe, Headphones, Pencil, Puzzle, Flame, ArrowUpRight } from "lucide-react";
+import { Check, Minus, Plus, X, Globe, Headphones, Pencil, Puzzle } from "lucide-react";
 import {
   getAlternatives,
   getCategoryPeers,
@@ -22,7 +22,9 @@ import { CompanySizeChart } from "@/components/public/CompanySizeChart";
 import { ReviewCard } from "@/components/public/ReviewCard";
 import { FaqAccordion } from "@/components/public/FaqAccordion";
 import { FeaturesSection } from "@/components/public/FeaturesSection";
-import { softwareBrandColors } from "@/lib/brandColors";
+import { PricingCards } from "@/components/public/PricingCards";
+import { brandColorFor } from "@/lib/brandColors";
+import { integrationLogo } from "@/lib/integrationLogos";
 import { formatPrice, formatRating, reviewCountLabel } from "@/lib/utils/formatRating";
 import type { Review, Software } from "@/lib/types";
 
@@ -47,7 +49,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      locale: "en_ZA",
+      locale: "en_GB",
       type: "website",
       images: [
         software.og_image_url ??
@@ -108,7 +110,7 @@ function SideRatingCard({
         <span className="text-2xl font-extrabold">{formatRating(value)}</span>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        Based on {reviewCount.toLocaleString("en-ZA")} reviews
+        Based on {reviewCount.toLocaleString("en-GB")} reviews
       </p>
     </div>
   );
@@ -208,7 +210,7 @@ export default async function SoftwareOverviewPage({
   );
 
   const compareWith = alternativesRaw[0] ?? null;
-  const brandColor = softwareBrandColors[software.slug] ?? "#00A86B";
+  const brandColor = brandColorFor(software);
   const reviews = reviewSample.items;
   const totalRated = Object.values(distribution).reduce((a, b) => a + b, 0);
   const maxDist = Math.max(1, ...Object.values(distribution));
@@ -252,7 +254,7 @@ export default async function SoftwareOverviewPage({
     {
       tag: "Overview",
       q: `What is ${software.name} used for?`,
-      a: `${software.description_short}${software.category ? ` It is listed under ${software.category.name} on CloudPayZA.` : ""}`,
+      a: `${software.description_short}${software.category ? ` It is listed under ${software.category.name} on Stack Match.` : ""}`,
     },
     {
       tag: "Pricing",
@@ -288,7 +290,7 @@ export default async function SoftwareOverviewPage({
     },
     {
       tag: "Availability",
-      q: `Is ${software.name} available in South Africa?`,
+      q: `Where is ${software.name} available?`,
       a:
         (software.countries_available as string[]).length > 0
           ? `${software.name} is available in ${(software.countries_available as string[]).join(", ")}.`
@@ -334,6 +336,48 @@ export default async function SoftwareOverviewPage({
   const standardSupport = ["Email", "Phone", "Live Chat", "Knowledge Base", "Forum"];
   const offeredSupport = software.support_types as string[];
 
+  // Pricing cards (reference-style). Highlight the middle of 3 / the higher of 2.
+  const plans = software.pricing_plans ?? [];
+  const pricingCards =
+    plans.length > 0
+      ? plans.map((plan, i) => {
+          const isPopular =
+            plans.length > 1 && (plans.length === 3 ? i === 1 : i === plans.length - 1);
+          return {
+            id: String(i),
+            name: plan.name,
+            tagline: getFallbackDescription(plan.name, i),
+            price: Number(plan.price) === 0 ? 0 : plan.price,
+            currency: plan.currency,
+            period: plan.billing,
+            features: (plan.features as string[]) ?? [],
+            badgeLabel: isPopular
+              ? "Most popular"
+              : Number(plan.price) === 0
+                ? "Free"
+                : undefined,
+            highlighted: isPopular,
+            accentColor: brandColor,
+            ctaSoftwareId: software.id,
+          };
+        })
+      : [
+          {
+            id: "custom",
+            name: "Standard Plan",
+            tagline: "Custom pricing tailored to your business needs.",
+            price: software.starting_price,
+            currency: software.price_currency,
+            period: software.billing_period,
+            features: [],
+            badgeLabel: software.free_trial ? "Free trial" : undefined,
+            highlighted: false,
+            accentColor: brandColor,
+            ctaSoftwareId: software.id,
+            ctaLabel: software.starting_price === null ? "Contact Vendor" : "Get Started",
+          },
+        ];
+
   return (
     <ProfileShell software={software} activeTab="overview">
       <script
@@ -370,7 +414,7 @@ export default async function SoftwareOverviewPage({
                   {[software, compareWith].map((s, idx) => (
                     <div key={s.id} className={idx === 1 ? "order-3" : "order-1"}>
                       <div className="flex flex-col items-center gap-2 text-center">
-                        <SoftwareLogo src={s.logo_url} name={s.name} size={64} />
+                        <SoftwareLogo src={s.logo_url} name={s.name} size={72} />
                         <p className="font-bold">{s.name}</p>
                         <div className="flex items-center gap-1.5">
                           <StarRating rating={Number(s.overall_rating)} size="sm" />
@@ -378,7 +422,7 @@ export default async function SoftwareOverviewPage({
                             {formatRating(Number(s.overall_rating))}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            ({s.review_count.toLocaleString("en-ZA")})
+                            ({s.review_count.toLocaleString("en-GB")})
                           </span>
                         </div>
                         <p className="text-2xl font-extrabold">
@@ -521,14 +565,14 @@ export default async function SoftwareOverviewPage({
         ) : (
           <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {alternativesRaw.map((alt, i) => {
-              const altColor = softwareBrandColors[alt.slug] ?? "#00A86B";
+              const altColor = brandColorFor(alt);
               const pct = percentAbove4(altDistributions[i]);
               return (
                 <div
                   key={alt.id}
                   className="flex flex-col rounded-2xl border bg-white p-6 card-shadow transition-all hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <SoftwareLogo src={alt.logo_url} name={alt.name} size={52} />
+                  <SoftwareLogo src={alt.logo_url} name={alt.name} size={60} />
                   <h3 className="mt-3 font-bold">
                     <Link href={`/software/${alt.slug}`} className="hover:underline">
                       {alt.name}
@@ -538,7 +582,7 @@ export default async function SoftwareOverviewPage({
                     <StarRating rating={Number(alt.overall_rating)} size="sm" />
                     <span className="font-semibold">{formatRating(Number(alt.overall_rating))}</span>
                     <span className="text-xs text-muted-foreground">
-                      ({alt.review_count.toLocaleString("en-ZA")})
+                      ({alt.review_count.toLocaleString("en-GB")})
                     </span>
                   </div>
 
@@ -658,7 +702,7 @@ export default async function SoftwareOverviewPage({
               Who uses {software.name}?
             </h2>
             <p className="text-sm text-muted-foreground leading-6">
-              Typical company sizes, industries, and job titles based on verified CloudPayZA reviews.
+              Typical company sizes, industries, and job titles based on verified Stack Match reviews.
             </p>
           </div>
           <div className="shrink-0 lg:w-72">
@@ -903,122 +947,7 @@ export default async function SoftwareOverviewPage({
         </div>
 
         <div className="mt-10 w-full">
-          {(software.pricing_plans?.length ?? 0) > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 w-full">
-              {software.pricing_plans.map((plan, i) => {
-                // Highlight the middle card when there are 3, or the second when there are 2.
-                const isPopular =
-                  software.pricing_plans.length > 1 &&
-                  (software.pricing_plans.length === 3 ? i === 1 : i === software.pricing_plans.length - 1);
-                return (
-                  <div
-                    key={i}
-                    className={`group relative flex flex-col rounded-[28px] border bg-zinc-50/40 dark:bg-zinc-900/10 p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${
-                      isPopular
-                        ? "border-zinc-350 dark:border-zinc-700 shadow-md shadow-zinc-250/25 bg-white dark:bg-zinc-950"
-                        : "border-zinc-200 dark:border-zinc-800 shadow-sm"
-                    }`}
-                  >
-                    {/* Card Header: Title and Popular Badge */}
-                    <div className="flex items-center justify-between gap-4">
-                      <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-heading">
-                        {plan.name}
-                      </h3>
-                      {isPopular && (
-                        <span
-                          className="inline-flex items-center gap-1 rounded-full bg-zinc-950 px-3 py-1 text-[11px] font-bold text-white shadow-md dark:bg-zinc-800"
-                        >
-                          <Flame className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0 mr-1" />
-                          Popular
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Price Section */}
-                    <div className="mt-4 flex items-baseline gap-1.5">
-                      <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 font-heading">
-                        {Number(plan.price) === 0
-                          ? "Free"
-                          : formatPrice(plan.price, plan.currency)}
-                      </span>
-                      <span className="text-sm font-medium text-zinc-400 dark:text-zinc-500">
-                        /{plan.billing}
-                      </span>
-                    </div>
-
-                    {/* Fallback Description */}
-                    <p className="mt-4 text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 font-sans min-h-[44px]">
-                      {getFallbackDescription(plan.name, i)}
-                    </p>
-
-                    {/* Call to Action Button */}
-                    <div className="mt-6">
-                      <Link
-                        href={software.affiliate_url ?? "#"}
-                        style={isPopular ? { backgroundColor: brandColor } : undefined}
-                        className={`w-full rounded-[16px] py-3.5 px-4 font-semibold flex items-center justify-center gap-1.5 transition-all text-sm font-sans cursor-pointer ${
-                          isPopular
-                            ? "text-white shadow-lg shadow-zinc-950/10 hover:opacity-90"
-                            : "bg-zinc-50/50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-850"
-                        }`}
-                      >
-                        Get Started <ArrowUpRight className="h-4.5 w-4.5 shrink-0" />
-                      </Link>
-                    </div>
-
-                    {/* Dotted Divider */}
-                    <div className="border-t border-dotted border-zinc-300 dark:border-zinc-700 my-6" />
-
-                    {/* Features List */}
-                    <ul className="space-y-4 flex-1">
-                      {plan.features.filter(Boolean).map((feat, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 text-sm text-zinc-700 dark:text-zinc-300 font-sans leading-snug">
-                          <Check className="h-4 w-4 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5" />
-                          <span>{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="rounded-[28px] border border-zinc-200 dark:border-zinc-800 bg-zinc-50/40 dark:bg-zinc-900/10 p-8 shadow-sm max-w-md">
-              <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 font-heading">
-                Standard Plan
-              </h3>
-              <div className="mt-4 flex items-baseline gap-1.5">
-                <span className="text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 font-heading">
-                  {software.starting_price !== null
-                    ? formatPrice(software.starting_price, software.price_currency)
-                    : "Custom"}
-                </span>
-                {software.starting_price !== null && (
-                  <span className="text-sm font-medium text-zinc-400 dark:text-zinc-505">
-                    /{software.billing_period}
-                  </span>
-                )}
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 font-sans">
-                Contact the vendor directly to get custom pricing options tailored to your business needs.
-              </p>
-              
-              <div className="mt-6">
-                <Link
-                  href={software.affiliate_url ?? "#"}
-                  className="w-full rounded-[16px] py-3.5 px-4 font-semibold flex items-center justify-center gap-1.5 transition-all text-sm font-sans bg-zinc-950 text-white shadow-lg shadow-zinc-950/25 hover:bg-zinc-900 dark:bg-zinc-50 dark:text-zinc-950 dark:shadow-none cursor-pointer"
-                >
-                  Contact Vendor <ArrowUpRight className="h-4.5 w-4.5 shrink-0" />
-                </Link>
-              </div>
-              
-              <div className="border-t border-dotted border-zinc-300 dark:border-zinc-700 my-6" />
-              
-              <div className="mt-3">
-                <PricingOptions software={software} />
-              </div>
-            </div>
-          )}
+          <PricingCards cards={pricingCards} columns={3} />
         </div>
       </section>
 
@@ -1027,15 +956,29 @@ export default async function SoftwareOverviewPage({
         <SectionHeading>Integrations</SectionHeading>
         {integrations.length > 0 ? (
           <div className="mt-6 flex flex-wrap gap-3">
-            {integrations.map((name) => (
-              <span
-                key={name}
-                className="inline-flex items-center gap-2.5 rounded-xl border bg-white px-5 py-3 text-sm font-semibold card-shadow transition-all hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <Puzzle className="h-4 w-4" style={{ color: brandColor }} />
-                {name}
-              </span>
-            ))}
+            {integrations.map((name) => {
+              const logo = integrationLogo(name);
+              return (
+                <span
+                  key={name}
+                  className="inline-flex items-center gap-3 rounded-xl border border-black/[0.06] dark:border-white/[0.08] bg-transparent px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
+                >
+                  {logo ? (
+                    <img
+                      src={logo}
+                      alt={`${name} logo`}
+                      width={28}
+                      height={28}
+                      loading="lazy"
+                      className="h-7 w-7 object-contain"
+                    />
+                  ) : (
+                    <Puzzle className="h-6 w-6" style={{ color: brandColor }} />
+                  )}
+                  {name}
+                </span>
+              );
+            })}
           </div>
         ) : (
           <p className="mt-6 rounded-2xl border bg-white p-10 text-center text-muted-foreground card-shadow">

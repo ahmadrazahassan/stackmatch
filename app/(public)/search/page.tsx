@@ -23,7 +23,7 @@ export default async function SearchPage({
   return (
     <div className="container-site pb-12">
       <div className="mx-auto max-w-2xl py-10">
-        <h1 className="text-center text-2xl font-bold text-foreground">Search CloudPayZA</h1>
+        <h1 className="text-center text-2xl font-bold text-foreground">Search Stack Match</h1>
         <div className="mt-5">
           <SearchBar initialQuery={q} size="lg" />
         </div>

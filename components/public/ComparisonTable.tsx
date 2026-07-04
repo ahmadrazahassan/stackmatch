@@ -144,7 +144,7 @@ export function ComparisonTable({ a, b }: { a: Software; b: Software }) {
                     style={{ borderTopColor: color || 'var(--color-muted)' }}
                   >
                     <div className="flex flex-col items-center gap-5">
-                      <SoftwareLogo src={s.logo_url} name={s.name} size={80} className="shadow-md" />
+                      <SoftwareLogo src={s.logo_url} name={s.name} size={96} className="shadow-md" />
                       <div className="text-center">
                         <Link href={`/software/${s.slug}`} className="font-extrabold text-2xl hover:underline transition-all" style={{ color: color }}>
                           {s.name}

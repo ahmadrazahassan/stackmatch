@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import {
   Radar,
   RadarChart,
@@ -65,24 +67,44 @@ export function ComparisonRadarChart({ softwareA, softwareB }: Props) {
   const colorA = softwareA.color || "#00a86b";
   const colorB = softwareB.color || "#f5a623";
 
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const dark = mounted && resolvedTheme === "dark";
+
+  const grid = dark ? "#27272a" : "#e5e7eb";
+  const angleTick = dark ? "#a1a1aa" : "#4b5563";
+  const radiusTick = dark ? "#71717a" : "#9ca3af";
+  const tooltipBg = dark ? "#18181b" : "#ffffff";
+  const tooltipBorder = dark ? "#27272a" : "#e5e7eb";
+  const tooltipText = dark ? "#fafafa" : "#18181b";
+
+  if (!mounted) return <div className="mx-auto h-[350px] w-full max-w-2xl" aria-hidden />;
+
   return (
-    <div className="mx-auto h-[350px] w-full max-w-2xl">
+    <div
+      className="mx-auto h-[350px] w-full max-w-2xl"
+      role="img"
+      aria-label={`Radar chart comparing ${softwareA.name} and ${softwareB.name} across ease of use, value for money, customer service and functionality`}
+    >
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-          <PolarGrid stroke="#e5e7eb" />
-          <PolarAngleAxis 
-            dataKey="subject" 
-            tick={{ fill: "#4b5563", fontSize: 13, fontWeight: 500 }} 
+          <PolarGrid stroke={grid} />
+          <PolarAngleAxis
+            dataKey="subject"
+            tick={{ fill: angleTick, fontSize: 13, fontWeight: 500 }}
           />
-          <PolarRadiusAxis 
-            angle={90} 
-            domain={[0, 5]} 
-            tick={{ fill: "#9ca3af", fontSize: 11 }} 
-            tickCount={6} 
-            stroke="#e5e7eb" 
+          <PolarRadiusAxis
+            angle={90}
+            domain={[0, 5]}
+            tick={{ fill: radiusTick, fontSize: 11 }}
+            tickCount={6}
+            stroke={grid}
           />
-          <Tooltip 
-            contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)', fontWeight: 600 }}
+          <Tooltip
+            contentStyle={{ borderRadius: '12px', border: `1px solid ${tooltipBorder}`, backgroundColor: tooltipBg, color: tooltipText, boxShadow: '0 8px 24px -8px rgba(0,0,0,0.18)', fontWeight: 600 }}
+            itemStyle={{ color: tooltipText }}
+            labelStyle={{ color: tooltipText, fontWeight: 700 }}
             formatter={(value: any) => [Number(value).toFixed(1), 'Score']}
           />
           <Legend wrapperStyle={{ paddingTop: '20px' }} />

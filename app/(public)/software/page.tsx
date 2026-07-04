@@ -10,7 +10,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "All Business Software Reviews",
   description:
-    "Browse every business software product reviewed on CloudPayZA. Verified ratings, ZAR pricing and side-by-side comparisons for SA businesses.",
+    "Browse every business software product reviewed on Stack Match. Verified ratings, GBP pricing and side-by-side comparisons for UK businesses.",
   alternates: { canonical: "/software" },
 };
 

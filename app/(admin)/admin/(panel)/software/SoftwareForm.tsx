@@ -23,11 +23,12 @@ import { TagInput } from "@/components/admin/TagInput";
 import { SoftwareCombobox, type SoftwareOption } from "@/components/admin/SoftwareCombobox";
 import { slugify } from "@/lib/utils/slugify";
 import { upsertSoftware, setSoftwareAlternatives } from "../../actions";
+import { DEFAULT_BRAND_COLOR } from "@/lib/brandColors";
 import type { Category, PricingPlan, Software } from "@/lib/types";
 import { Plus, Trash2 } from "lucide-react";
 
 const SUPPORT_TYPES = ["Phone", "Live Chat", "Email", "Knowledge Base", "Forum"];
-const CURRENCIES = ["ZAR", "USD", "EUR", "GBP"];
+const CURRENCIES = ["GBP", "USD", "EUR", "ZAR"];
 const BILLING = ["month", "year", "one-time", "user/month"];
 
 interface SoftwareFormProps {
@@ -56,9 +57,10 @@ export function SoftwareForm({
     description_short: initial?.description_short ?? "",
     description_full: initial?.description_full ?? "",
     logo_url: initial?.logo_url ?? null,
+    brand_color: initial?.brand_color ?? "",
     screenshots: (initial?.screenshots as string[]) ?? [],
     starting_price: initial?.starting_price?.toString() ?? "",
-    price_currency: initial?.price_currency ?? "ZAR",
+    price_currency: initial?.price_currency ?? "GBP",
     billing_period: initial?.billing_period ?? "month",
     free_trial: initial?.free_trial ?? false,
     free_version: initial?.free_version ?? false,
@@ -95,6 +97,7 @@ export function SoftwareForm({
     const values = {
       ...form,
       category_id: form.category_id || null,
+      brand_color: form.brand_color.trim() || null,
       starting_price: form.starting_price === "" ? null : Number(form.starting_price),
       founded_year: form.founded_year === "" ? null : Number(form.founded_year),
       affiliate_url: form.affiliate_url || null,
@@ -233,6 +236,39 @@ export function SoftwareForm({
               onChange={(url) => set("logo_url", url)}
               label="a logo"
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="brand_color">Brand Colour</Label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                aria-label="Brand colour picker"
+                value={form.brand_color || DEFAULT_BRAND_COLOR}
+                onChange={(e) => set("brand_color", e.target.value)}
+                className="h-10 w-14 shrink-0 cursor-pointer rounded-md border bg-white p-1"
+              />
+              <Input
+                id="brand_color"
+                placeholder={`${DEFAULT_BRAND_COLOR} (default)`}
+                value={form.brand_color}
+                onChange={(e) => set("brand_color", e.target.value)}
+                className="max-w-40 font-mono"
+              />
+              {form.brand_color && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => set("brand_color", "")}
+                >
+                  Reset to auto
+                </Button>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Accent colour used across this product&apos;s profile, card, pricing plans and
+              charts. Leave blank to use the site default.
+            </p>
           </div>
           <div className="space-y-2">
             <Label>Screenshots (up to 10)</Label>
@@ -524,7 +560,7 @@ export function SoftwareForm({
               <TagInput
                 values={form.countries_available}
                 onChange={(v) => set("countries_available", v)}
-                placeholder="e.g. South Africa"
+                placeholder="e.g. United Kingdom"
               />
             </div>
             <div className="space-y-2">

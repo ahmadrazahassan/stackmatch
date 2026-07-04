@@ -98,7 +98,7 @@ export default async function AdminAnalyticsPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          {totalClicks.toLocaleString("en-ZA")} affiliate clicks · {selected.label.toLowerCase()}
+          {totalClicks.toLocaleString("en-GB")} affiliate clicks · {selected.label.toLowerCase()}
         </p>
         <div className="flex gap-2">
           {RANGES.map((r) => (

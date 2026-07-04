@@ -65,7 +65,7 @@ const SAGE_RICH_FEATURES: RichFeature[] = [
     name: "VAT & Tax Reporting",
     rating: 4.5,
     reviewsCount: 138,
-    description: "Supports automatic VAT calculation and prepares reports compliant with South African Revenue Service (SARS) guidelines. Reviewers note it makes filing VAT201 forms straightforward and fast."
+    description: "Supports automatic VAT calculation and prepares reports compliant with HM Revenue and Customs (HMRC) guidelines. Reviewers note it makes filing VAT returns straightforward and fast."
   },
   {
     name: "Mobile App Access",

@@ -24,7 +24,7 @@ import type { Review } from "@/lib/types";
 
 const INDUSTRIES = ["Accounting", "Finance", "Healthcare", "Construction", "Retail", "Manufacturing", "IT", "Education", "Legal", "Real Estate", "Mining", "NGO", "Other"];
 const COMPANY_SIZES = ["1-10", "11-50", "51-200", "201-500", "500+"];
-const COUNTRIES = ["South Africa", "Kenya", "Nigeria", "Ghana", "Egypt", "Other Africa", "United Kingdom", "United States"];
+const COUNTRIES = ["United Kingdom", "Ireland", "United States", "Canada", "Australia", "Germany", "France", "Other"];
 const DURATIONS = ["less than 6 months", "6-12 months", "1-2 years", "2+ years", "5+ years"];
 
 interface ReviewFormProps {
@@ -43,7 +43,7 @@ export function ReviewForm({ softwareOptions, initial }: ReviewFormProps) {
     reviewer_company: initial?.reviewer_company ?? "",
     reviewer_industry: initial?.reviewer_industry ?? "",
     reviewer_company_size: initial?.reviewer_company_size ?? "",
-    reviewer_country: initial?.reviewer_country ?? "South Africa",
+    reviewer_country: initial?.reviewer_country ?? "United Kingdom",
     reviewer_avatar_url: initial?.reviewer_avatar_url ?? null,
     verified_linkedin: initial?.verified_linkedin ?? false,
     verified_badge: initial?.verified_badge ?? "",

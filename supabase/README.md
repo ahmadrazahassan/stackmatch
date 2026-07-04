@@ -1,4 +1,4 @@
-# CloudPayZA — Supabase setup
+# Stackmatch — Supabase setup
 
 ## 1. Create the project
 
@@ -12,12 +12,32 @@
 
 ## 2. Run the schema
 
-Dashboard → **SQL Editor** → New query → paste the full contents of
-[`migrations.sql`](./migrations.sql) → **Run**.
+Run these in order, each as Dashboard → **SQL Editor** → New query → paste → **Run**:
 
-This creates all tables, indexes, the rating roll-up trigger, RLS policies,
-the four public storage buckets (`logos`, `screenshots`, `avatars`, `articles`)
-and default site settings.
+1. [`migrations.sql`](./migrations.sql) — core schema: categories, software,
+   reviews, articles, comparisons, affiliate click tracking, site settings,
+   the rating roll-up trigger, RLS policies and the four public storage
+   buckets (`logos`, `screenshots`, `avatars`, `articles`).
+2. [`migration_002_pages_and_settings.sql`](./migration_002_pages_and_settings.sql) —
+   adds the `pages` table (About/Privacy Policy/Terms, editable from
+   **Admin → Pages**) and extra `site_settings` keys used by the homepage
+   stats bar, footer tagline and compare page.
+3. [`migration_003_enterprise_additions.sql`](./migration_003_enterprise_additions.sql) —
+   `audit_log` (who changed what, auto-populated by triggers), `redirects`
+   (301/302 table, pre-seeded with the `/privacy` → `/privacy-policy` fix)
+   and `media_library` (asset tracking for uploaded files). All additive;
+   nothing here changes the single-admin auth model below.
+4. [`migration_004_software_brand_color.sql`](./migration_004_software_brand_color.sql) —
+   adds `software.brand_color` (the per-product accent colour, now editable
+   from the **Admin → Software** form instead of the hardcoded map) and
+   ensures the `integrations` column exists. Backfills the eight seeded
+   products with their existing colours so nothing changes visually.
+
+Already ran `migrations.sql` on a live project? Just run 002–004 —
+each is idempotent and safe to re-run. The app is written to keep working
+*before* 004 is applied (it falls back to the built-in colour map), so run
+order is not fragile; after applying 004, restart the dev server once so it
+re-detects the new column.
 
 ## 3. (Optional) Load demo data
 

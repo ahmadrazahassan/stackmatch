@@ -14,7 +14,7 @@ import { SentimentBar } from "@/components/public/SentimentBar";
 import { Pagination } from "@/components/public/Pagination";
 import { ReviewFilters } from "./ReviewFilters";
 import { formatRating } from "@/lib/utils/formatRating";
-import { softwareBrandColors } from "@/lib/brandColors";
+import { brandColorFor } from "@/lib/brandColors";
 
 export const revalidate = 3600;
 
@@ -28,7 +28,7 @@ export async function generateMetadata({
   if (!software) return { title: "Software Not Found" };
   return {
     title: `${software.name} Reviews ${new Date().getFullYear()} — Verified User Ratings`,
-    description: `Read ${software.review_count} verified user reviews of ${software.name}. Real ratings for ease of use, value for money and support from South African businesses.`,
+    description: `Read ${software.review_count} verified user reviews of ${software.name}. Real ratings for ease of use, value for money and support from UK businesses.`,
     alternates: { canonical: `/software/${software.slug}/reviews` },
   };
 }
@@ -52,7 +52,7 @@ export default async function SoftwareReviewsPage({
   const software = await getSoftwareBySlug(slug);
   if (!software) notFound();
 
-  const brandColor = softwareBrandColors[software.slug] ?? "#00A86B";
+  const brandColor = brandColorFor(software);
 
   const page = Math.max(1, Number(sp.page) || 1);
   const [{ items: reviews, total }, distribution, settings] = await Promise.all([
@@ -106,7 +106,7 @@ export default async function SoftwareReviewsPage({
               <StarRating rating={Number(software.overall_rating)} size="lg" />
             </div>
             <p className="mt-1 text-center text-sm text-muted-foreground">
-              {totalReviews.toLocaleString("en-ZA")} reviews
+              {totalReviews.toLocaleString("en-GB")} reviews
             </p>
 
             <ul className="mt-5 space-y-1.5">

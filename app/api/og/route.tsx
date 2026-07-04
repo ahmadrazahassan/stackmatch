@@ -5,10 +5,10 @@ export const runtime = "edge";
 
 /** GET /api/og?title=&subtitle= → branded 1200x630 OG image */
 export async function GET(request: NextRequest) {
-  const title = request.nextUrl.searchParams.get("title") ?? "CloudPayZA";
+  const title = request.nextUrl.searchParams.get("title") ?? "Stack Match";
   const subtitle =
     request.nextUrl.searchParams.get("subtitle") ??
-    "South Africa's #1 Business Software Reviews Platform";
+    "The UK's #1 Business Software Reviews Platform";
 
   return new ImageResponse(
     (
@@ -24,9 +24,9 @@ export async function GET(request: NextRequest) {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ fontSize: 36, fontWeight: 700, color: "#FFFFFF" }}>CloudPay</span>
-          <span style={{ fontSize: 36, fontWeight: 700, color: "#00A86B" }}>ZA</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 36, fontWeight: 700, color: "#FFFFFF" }}>Stack</span>
+          <span style={{ fontSize: 36, fontWeight: 700, color: "#00A86B" }}>Match</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <span
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
             justifyContent: "space-between",
           }}
         >
-          <span style={{ fontSize: 22, color: "#6B7280" }}>cloudpayza.com</span>
+          <span style={{ fontSize: 22, color: "#6B7280" }}>stackmatch.uk</span>
           <div
             style={{
               display: "flex",

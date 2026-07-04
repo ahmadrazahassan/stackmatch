@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Breadcrumb } from "@/components/public/Breadcrumb";
-import { getPublishedComparisons } from "@/lib/supabase/queries";
+import { getPublishedComparisons, getSiteSettings } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/server";
 import { ComparisonCard } from "@/components/public/ComparisonCard";
 import { CompareSelector } from "@/components/public/CompareSelector";
@@ -11,12 +11,19 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Compare Business Software Side by Side",
   description:
-    "Head-to-head software comparisons for South African businesses — pricing, ratings, features and expert verdicts.",
+    "Head-to-head software comparisons for UK businesses — pricing, ratings, features and expert verdicts.",
   alternates: { canonical: "/compare" },
 };
 
 export default async function CompareIndexPage() {
-  const comparisons = await getPublishedComparisons();
+  const [comparisons, settings] = await Promise.all([
+    getPublishedComparisons(),
+    getSiteSettings(),
+  ]);
+  const statPercentage = settings.compare_stat_percentage || "48%";
+  const statText =
+    settings.compare_stat_text ||
+    "of SMBs say regrettable software purchases increased costs—the most common negative outcome cited in a recent survey.";
 
   // Fetch software for the CompareSelector
   const supabase = await createClient();
@@ -76,7 +83,7 @@ export default async function CompareIndexPage() {
               Popular Comparisons
             </h2>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Browse top trending head-to-head comparisons analyzed for South African businesses.
+              Browse top trending head-to-head comparisons analyzed for UK businesses.
             </p>
           </div>
         </div>
@@ -108,19 +115,19 @@ export default async function CompareIndexPage() {
             </span>
             
             <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight font-heading">
-              Compare software easily with CloudPayZA
+              Compare software easily with Stack Match
             </h2>
             <div className="mt-6 space-y-6 text-sm md:text-base text-zinc-500 dark:text-zinc-400 leading-relaxed font-sans">
               <p>
                 Choosing software is critical for SMBs—but challenging. With hundreds of options,
-                comparing features, pricing, and deployment can be overwhelming. CloudPayZA's free
+                comparing features, pricing, and deployment can be overwhelming. Stack Match's free
                 comparison tool puts everything in one view.
               </p>
               
               <div className="rounded-[20px] bg-white dark:bg-zinc-900 p-6 shadow-sm border border-dashed border-zinc-200 dark:border-zinc-800 my-8 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-brand"></div>
                 <p className="text-base text-zinc-800 dark:text-zinc-200 font-semibold leading-relaxed">
-                  Nearly <span className="text-brand font-bold text-lg">48%</span> of SMBs say regrettable software purchases increased costs—the most common negative outcome cited in a recent survey.
+                  Nearly <span className="text-brand font-bold text-lg">{statPercentage}</span> {statText}
                 </p>
               </div>
               
@@ -144,7 +151,7 @@ export default async function CompareIndexPage() {
             
             <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight font-heading mb-3">Stay in the loop</h3>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8 leading-relaxed font-sans">
-              Join thousands of South African SMBs. Get the latest software reviews, comparisons, and exclusive discounts delivered to your inbox.
+              Join thousands of UK SMBs. Get the latest software reviews, comparisons, and exclusive discounts delivered to your inbox.
             </p>
             
             <form className="w-full max-w-sm mx-auto space-y-3">

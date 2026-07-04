@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { BarChart3 } from "lucide-react";
-import { StarRating } from "./StarRating";
 import { SoftwareLogo } from "./SoftwareLogo";
+import { GlossyButton } from "./GlossyButton";
 import { formatPrice, formatRating } from "@/lib/utils/formatRating";
 import type { Software } from "@/lib/types";
-import { softwareBrandColors } from "@/lib/brandColors";
+import { brandColorFor } from "@/lib/brandColors";
 
 interface HomepageCompareProps {
   compareSoftware: Software[];
@@ -42,7 +42,7 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
       <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-zinc-500">
         <span>Comparison:</span>
         {items.map((item) => {
-          const brandColor = softwareBrandColors[item.slug] ?? "#00A86B";
+          const brandColor = brandColorFor(item);
           return (
             <span
               key={item.id}
@@ -65,17 +65,17 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
       <div className="mt-10 overflow-x-auto pb-4">
         <div className="min-w-[768px] grid grid-cols-4 gap-6">
           {items.map((s) => {
-            const brandColor = softwareBrandColors[s.slug] ?? "#00A86B";
+            const brandColor = brandColorFor(s);
 
             return (
               <div
                 key={s.id}
-                className="flex flex-col justify-between rounded-[24px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 h-full font-sans"
+                className="flex h-full flex-col justify-between rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 font-sans shadow-[0_10px_30px_-18px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_44px_-22px_rgba(0,0,0,0.28)]"
               >
                 {/* Product Header */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <SoftwareLogo src={s.logo_url} name={s.name} size={40} className="rounded-lg border bg-white shadow-sm shrink-0" />
+                    <SoftwareLogo src={s.logo_url} name={s.name} size={52} className="rounded-lg shrink-0" />
                     <div className="min-w-0">
                       <h3 className="font-bold text-zinc-900 dark:text-zinc-50 text-sm truncate">{s.name}</h3>
                       <div className="flex items-center gap-1 mt-0.5 text-xs text-zinc-500 font-medium">
@@ -86,7 +86,7 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
                   </div>
 
                   {/* Starting Price row */}
-                  <div className="pt-4 border-t border-dashed border-zinc-150 dark:border-zinc-800 flex justify-between items-center text-xs">
+                  <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-between items-center text-xs">
                     <span className="text-zinc-400 dark:text-zinc-550 font-bold uppercase tracking-wider text-[9px]">Starting Price</span>
                     <span className="font-bold text-zinc-900 dark:text-zinc-50 text-right">
                       {s.starting_price !== null
@@ -96,7 +96,7 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
                   </div>
 
                   {/* Rating dimensions */}
-                  <div className="pt-4 border-t border-dashed border-zinc-150 dark:border-zinc-800 space-y-4">
+                  <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 space-y-4">
                     {(
                       [
                         ["Value for Money", "value_for_money_rating"],
@@ -125,14 +125,8 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
                 </div>
 
                 {/* Profile CTA */}
-                <div className="mt-8 pt-4 border-t border-dashed border-zinc-150 dark:border-zinc-800">
-                  <Link
-                    href={`/software/${s.slug}`}
-                    className="flex w-full items-center justify-center rounded-full text-white py-2 text-xs font-bold tracking-wider hover:opacity-90 transition-all duration-200 active:scale-[0.98] text-center"
-                    style={{ backgroundColor: brandColor }}
-                  >
-                    View profile
-                  </Link>
+                <div className="mt-8 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                  <GlossyButton href={`/software/${s.slug}`} label="View profile" variant="brand" brandColor={brandColor} />
                 </div>
               </div>
             );
@@ -141,7 +135,7 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
       </div>
 
       {/* Banner Callout */}
-      <div className="mt-12 rounded-[24px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/10 p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm font-sans">
+      <div className="mt-12 rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/20 p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.22)] font-sans">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-zinc-950 dark:bg-white">
             <BarChart3 className="h-6 w-6 text-white dark:text-zinc-950" strokeWidth={2} />
@@ -151,12 +145,9 @@ export function HomepageCompare({ compareSoftware }: HomepageCompareProps) {
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Compare features, ratings, and pricing side-by-side instantly.</p>
           </div>
         </div>
-        <Link
-          href="/compare"
-          className="w-full md:w-auto shrink-0 inline-flex justify-center items-center rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 px-8 py-3 text-xs font-bold tracking-wider hover:opacity-90 transition-all duration-200 active:scale-[0.98]"
-        >
-          Create your comparison
-        </Link>
+        <div className="w-full md:w-auto shrink-0">
+          <GlossyButton href="/compare" label="Create your comparison" variant="dark" fullWidth={false} className="w-full md:w-auto" />
+        </div>
       </div>
     </section>
   );

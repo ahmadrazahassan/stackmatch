@@ -43,6 +43,9 @@ export interface Software {
   /** Optional — requires supabase/add_integrations.sql */
   integrations?: string[];
 
+  /** Admin-set accent colour (hex). Falls back to lib/brandColors.ts. */
+  brand_color: string | null;
+
   affiliate_url: string | null;
   vendor_website: string | null;
 
@@ -141,6 +144,18 @@ export interface Article {
   related_software?: Pick<Software, "id" | "name" | "slug" | "logo_url" | "overall_rating" | "review_count" | "description_short"> | null;
 }
 
+export interface Page {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  meta_title: string | null;
+  meta_description: string | null;
+  status: Status;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Comparison {
   id: string;
   software_a_id: string;
@@ -173,4 +188,20 @@ export interface SiteSetting {
   key: string;
   value: string | null;
   updated_at: string;
+}
+
+export type NewsletterStatus = "pending" | "confirmed" | "unsubscribed";
+
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  status: NewsletterStatus;
+  interests: string[];
+  confirm_token: string | null;
+  confirmed_at: string | null;
+  unsubscribed_at: string | null;
+  consent_ip_hash: string | null;
+  consent_source: string | null;
+  user_agent: string | null;
+  created_at: string;
 }

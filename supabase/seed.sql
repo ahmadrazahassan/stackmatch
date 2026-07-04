@@ -1,5 +1,5 @@
 -- ============================================================================
--- CloudPayZA — DEMO SEED DATA
+-- Stackmatch — DEMO SEED DATA
 -- Run AFTER migrations.sql.
 --
 -- ⚠️  All reviews, ratings, quotes and verdicts below are PLACEHOLDER DEMO
@@ -363,8 +363,8 @@ INSERT INTO articles (
   'We compared the leading cloud accounting platforms on VAT compliance, ZAR pricing and ease of use. Here are our top picks for SA SMBs in 2026.',
   '<h2>How we chose</h2><p>[Demo article body] We evaluated each platform on five criteria: SARS/VAT compliance, total cost in rand, ease of use for non-accountants, bank feed reliability with major SA banks, and support quality.</p><h2>1. Sage Accounting — best for VAT compliance</h2><p>[Demo content — replace via admin panel.]</p><h2>2. Xero — best user experience</h2><p>[Demo content — replace via admin panel.]</p><h2>3. QuickBooks Online — best reporting</h2><p>[Demo content — replace via admin panel.]</p><h2>Verdict</h2><p>[Demo content — replace via admin panel.]</p>',
   'Guide', 'a0000000-0000-0000-0000-000000000001',
-  'CloudPayZA Editorial (Demo)', 'Senior Software Analyst',
-  'The CloudPayZA editorial team researches and tests business software for the South African market.',
+  'Stackmatch Editorial (Demo)', 'Senior Software Analyst',
+  'The Stackmatch editorial team researches and tests business software for the South African market.',
   'Best Accounting Software in South Africa 2026 — Top 8 Compared',
   'The 8 best accounting software platforms for South African SMBs in 2026, compared on VAT compliance, pricing and features.',
   9, 'published', TRUE, '2026-05-20'
@@ -375,8 +375,8 @@ INSERT INTO articles (
   'The big three of cloud accounting, compared head-to-head on the things that matter to South African businesses.',
   '<h2>The contenders</h2><p>[Demo article body] Sage, Xero and QuickBooks dominate SA cloud accounting. Each has a distinct sweet spot.</p><h2>Pricing in rand</h2><p>[Demo content — replace via admin panel.]</p><h2>VAT &amp; SARS compliance</h2><p>[Demo content — replace via admin panel.]</p><h2>Our recommendation</h2><p>[Demo content — replace via admin panel.]</p>',
   'Comparison', 'a0000000-0000-0000-0000-000000000002',
-  'CloudPayZA Editorial (Demo)', 'Senior Software Analyst',
-  'The CloudPayZA editorial team researches and tests business software for the South African market.',
+  'Stackmatch Editorial (Demo)', 'Senior Software Analyst',
+  'The Stackmatch editorial team researches and tests business software for the South African market.',
   'Sage vs Xero vs QuickBooks for South Africa (2026 Comparison)',
   'Sage vs Xero vs QuickBooks compared for South African businesses: pricing, VAT compliance, features and our verdict.',
   7, 'published', TRUE, '2026-05-28'
@@ -387,8 +387,8 @@ INSERT INTO articles (
   'PAYE, UIF, SDL, EMP201, EMP501, IRP5s — a plain-English checklist of what every SA employer must file, and when.',
   '<h2>Monthly obligations</h2><p>[Demo article body] Every registered employer must submit an EMP201 and pay PAYE, UIF and SDL by the 7th of the following month.</p><h2>Bi-annual reconciliation</h2><p>[Demo content — replace via admin panel.]</p><h2>How payroll software helps</h2><p>[Demo content — replace via admin panel.]</p>',
   'Guide', 'a0000000-0000-0000-0000-000000000004',
-  'CloudPayZA Editorial (Demo)', 'Payroll Specialist',
-  'The CloudPayZA editorial team researches and tests business software for the South African market.',
+  'Stackmatch Editorial (Demo)', 'Payroll Specialist',
+  'The Stackmatch editorial team researches and tests business software for the South African market.',
   'SA Payroll Compliance Checklist 2026 — PAYE, UIF, EMP501',
   'A practical 2026 payroll compliance checklist for South African employers: monthly EMP201s, filing season, IRP5s and more.',
   6, 'published', FALSE, '2026-06-03'

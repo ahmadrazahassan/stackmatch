@@ -30,7 +30,7 @@ export function SoftwareLogo({ src, name, size, className }: SoftwareLogoProps) 
       width={size}
       height={size}
       style={{ width: size, height: size }}
-      className={cn("shrink-0 rounded-[20%] border border-black/5 bg-white object-contain p-2 shadow-sm", className)}
+      className={cn("shrink-0 rounded-[20%] object-contain", className)}
     />
   );
 }

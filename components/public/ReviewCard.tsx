@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { BadgeCheck, ThumbsUp, Plus, Minus } from "lucide-react";
+import { ThumbsUp, Plus, Minus } from "lucide-react";
 import { StarRating } from "./StarRating";
+import { VerifiedTick, LinkedInVerified } from "./VerifiedBadges";
 import { formatDate } from "@/lib/utils/formatDate";
 import type { Review } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 export function ReviewCard({ review, vendorName, brandColor }: { review: Review; vendorName?: string | null; brandColor?: string }) {
   return (
@@ -25,18 +25,14 @@ export function ReviewCard({ review, vendorName, brandColor }: { review: Review;
             </div>
           )}
           <div className="min-w-0">
-            <h4 className="flex flex-wrap items-center gap-2 text-base font-bold text-zinc-900 dark:text-zinc-50">
+            <h4 className="flex flex-wrap items-center gap-1.5 text-base font-bold text-zinc-900 dark:text-zinc-50">
               {review.reviewer_name}
-              {review.verified_linkedin && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200/80 dark:border-zinc-800 px-2.5 py-0.5 text-[10px] font-semibold text-zinc-600 dark:text-zinc-350">
-                  <BadgeCheck className="h-3.5 w-3.5 text-emerald-500" />
-                  {review.verified_badge ?? "Verified LinkedIn"}
-                </span>
-              )}
+              {review.verified_linkedin && <VerifiedTick className="h-[18px] w-[18px]" />}
             </h4>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
               {[review.reviewer_job_title, review.reviewer_company].filter(Boolean).join(", ")}
             </p>
+            {review.verified_linkedin && <LinkedInVerified className="mt-1.5" />}
             
             {/* Metadata tags */}
             <div className="mt-2.5 flex flex-wrap gap-1.5">
@@ -52,7 +48,7 @@ export function ReviewCard({ review, vendorName, brandColor }: { review: Review;
               )}
               {review.reviewer_country && (
                 <span className="inline-flex items-center rounded-md bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800 px-2 py-0.5 text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 font-sans">
-                  🇿🇦 {review.reviewer_country}
+                  {review.reviewer_country}
                 </span>
               )}
               {review.used_for_duration && (

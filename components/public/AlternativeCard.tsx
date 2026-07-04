@@ -9,7 +9,7 @@ export function AlternativeCard({ software }: { software: Software }) {
   return (
     <div className="flex h-full flex-col rounded-lg border bg-white p-5 card-shadow transition-shadow hover:shadow-md">
       <div className="flex items-center gap-3">
-        <SoftwareLogo src={software.logo_url} name={software.name} size={48} />
+        <SoftwareLogo src={software.logo_url} name={software.name} size={56} />
         <div className="min-w-0">
           <Link href={`/software/${software.slug}`}>
             <h3 className="truncate font-semibold hover:text-brand">{software.name}</h3>

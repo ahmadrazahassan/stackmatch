@@ -130,7 +130,7 @@ export default async function AdminDashboardPage() {
                 <card.icon className="h-5 w-5 text-brand" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats[card.key].toLocaleString("en-ZA")}</p>
+                <p className="text-2xl font-bold">{stats[card.key].toLocaleString("en-GB")}</p>
                 <p className="text-sm text-muted-foreground">{card.label}</p>
               </div>
             </CardContent>

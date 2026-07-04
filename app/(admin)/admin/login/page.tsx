@@ -49,7 +49,7 @@ function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="admin@cloudpayza.com"
+          placeholder="admin@stackmatch.uk"
         />
       </div>
       <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
             <Lock className="h-5 w-5 text-brand" />
           </div>
           <CardTitle className="text-xl">
-            CloudPay<span className="text-brand">ZA</span> Admin
+            Stack <span className="text-brand">Match</span> Admin
           </CardTitle>
           <CardDescription>Sign in to manage the platform</CardDescription>
         </CardHeader>

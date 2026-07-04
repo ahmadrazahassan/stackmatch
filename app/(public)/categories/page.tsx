@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Breadcrumb } from "@/components/public/Breadcrumb";
-import { CategoryCard } from "@/components/public/CategoryCard";
 import { getCategories } from "@/lib/supabase/queries";
 
 export const revalidate = 3600;
@@ -9,59 +9,74 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "All Software Categories",
   description:
-    "Browse every business software category on CloudPayZA — accounting, payroll, HR, CRM, ERP and more, reviewed for South African businesses.",
+    "Browse every business software category on Stack Match — accounting, payroll, HR, CRM, ERP and more, reviewed for UK businesses.",
   alternates: { canonical: "/categories" },
 };
 
 export default async function CategoriesPage() {
   const categories = await getCategories();
+  const totalSoftware = categories.reduce((sum, c) => sum + (c.software_count ?? 0), 0);
 
   return (
-    <div className="container-site py-12">
-      {/* Header card container with dashed border and soft light blue gradient */}
-      <div className="mb-12 rounded-[32px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-8 sm:p-12 text-center shadow-sm relative overflow-hidden">
-        {/* Soft background glow circles for high-end feel */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 z-0" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none translate-y-1/2 z-0" />
-
-        {/* Background 3D Shape Cover */}
-        <Image
-          src="/pages/categories.png"
-          alt=""
-          fill
-          priority
-          sizes="(max-width: 1200px) 100vw, 1200px"
-          className="object-cover opacity-90 pointer-events-none z-0"
-        />
-
-        {/* Translucent glass backdrop overlay for high text readability */}
-        <div className="absolute inset-0 bg-white/75 dark:bg-zinc-950/80 backdrop-blur-[2px] z-0" />
-
-        <div className="relative z-10 flex flex-col items-center">
+    <div className="pb-28">
+      {/* ---------- Header ---------- */}
+      <div className="container-site">
+        <div className="border-b border-zinc-200 pb-11 pt-6 dark:border-zinc-800">
           <Breadcrumb items={[{ label: "Categories" }]} />
-          <span className="mt-6 inline-flex items-center rounded-full bg-brand/10 dark:bg-brand/20 px-3 py-1 text-[10px] font-bold text-brand uppercase tracking-wider">
-            Explore Categories
-          </span>
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl font-heading leading-tight animate-fade-in">
-            All Software Categories
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-zinc-500 dark:text-zinc-400 sm:text-base font-sans leading-relaxed">
-            Browse through all business software categories on CloudPayZA. Find verified software solutions analyzed for South African SMBs.
+          <p className="mt-9 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400 dark:text-zinc-500">
+            Browse
           </p>
+          <h1 className="mt-3 text-[2.15rem] font-semibold leading-[1.1] tracking-tight text-zinc-900 dark:text-zinc-50 font-heading sm:text-[2.65rem]">
+            Software categories
+          </h1>
+          <p className="mt-5 max-w-2xl text-[15.5px] leading-7 text-zinc-500 dark:text-zinc-400">
+            Every category we cover, from accounting and payroll to HR and CRM. Each one is reviewed
+            and rated for UK businesses, with verified user feedback and side-by-side comparisons.
+          </p>
+          {categories.length > 0 && (
+            <p className="mt-7 text-[13px] font-medium text-zinc-400 dark:text-zinc-500">
+              {categories.length} categories · {totalSoftware} products reviewed
+            </p>
+          )}
         </div>
       </div>
 
-      {categories.length === 0 ? (
-        <p className="rounded-[24px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-12 text-center text-zinc-500 dark:text-zinc-400 shadow-sm font-sans">
-          Categories will appear here once created in the admin panel.
-        </p>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in-up">
-          {categories.map((c) => (
-            <CategoryCard key={c.id} category={c} />
-          ))}
-        </div>
-      )}
+      {/* ---------- Grid ---------- */}
+      <div className="container-site mt-14">
+        {categories.length === 0 ? (
+          <p className="rounded-2xl border border-zinc-200 bg-white p-12 text-center text-[15px] text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400">
+            Categories will appear here once created in the admin panel.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 dark:border-zinc-800 dark:bg-zinc-800 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((c, i) => (
+              <Link
+                key={c.id}
+                href={`/category/${c.slug}`}
+                className="group relative flex flex-col bg-white p-8 transition-colors hover:bg-zinc-50/80 dark:bg-zinc-950 dark:hover:bg-zinc-900/50"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-[13px] font-semibold tabular-nums text-brand">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-zinc-300 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-brand dark:text-zinc-600" />
+                </div>
+                <h2 className="mt-5 text-[1.15rem] font-semibold tracking-tight text-zinc-900 transition-colors group-hover:text-brand dark:text-zinc-50 font-heading">
+                  {c.name}
+                </h2>
+                {c.description && (
+                  <p className="mt-2.5 line-clamp-2 text-[14px] leading-7 text-zinc-500 dark:text-zinc-400">
+                    {c.description}
+                  </p>
+                )}
+                <p className="mt-6 text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-500">
+                  {c.software_count} {c.software_count === 1 ? "product" : "products"}
+                </p>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

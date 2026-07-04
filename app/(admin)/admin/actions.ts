@@ -191,6 +191,43 @@ export async function deleteArticleBulk(ids: string[]): Promise<ActionResult> {
 }
 
 // ----------------------------------------------------------------------------
+// PAGES (static content: About, Privacy Policy, Terms, etc.)
+// ----------------------------------------------------------------------------
+
+export async function upsertPage(
+  id: string | null,
+  values: Record<string, unknown>
+): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const query = id
+    ? supabase.from("pages").update(values).eq("id", id).select("id").single()
+    : supabase.from("pages").insert(values).select("id").single();
+  const { data, error } = await query;
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/pages");
+  revalidatePublic();
+  return { ok: true, id: data.id };
+}
+
+export async function deletePage(id: string): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("pages").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/pages");
+  revalidatePublic();
+  return { ok: true };
+}
+
+export async function deletePageBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("pages").delete().in("id", ids);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/pages");
+  revalidatePublic();
+  return { ok: true };
+}
+
+// ----------------------------------------------------------------------------
 // COMPARISONS
 // ----------------------------------------------------------------------------
 
@@ -246,5 +283,43 @@ export async function saveSettings(
   if (error) return { ok: false, error: error.message };
   revalidatePath("/admin/settings");
   revalidatePublic();
+  return { ok: true };
+}
+
+// ----------------------------------------------------------------------------
+// NEWSLETTER
+// ----------------------------------------------------------------------------
+
+export async function updateNewsletterSubscriberStatus(
+  id: string,
+  status: "confirmed" | "unsubscribed"
+): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase
+    .from("newsletter_subscribers")
+    .update(
+      status === "unsubscribed"
+        ? { status, unsubscribed_at: new Date().toISOString() }
+        : { status, confirmed_at: new Date().toISOString(), unsubscribed_at: null }
+    )
+    .eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/newsletter");
+  return { ok: true };
+}
+
+export async function deleteNewsletterSubscriber(id: string): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("newsletter_subscribers").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/newsletter");
+  return { ok: true };
+}
+
+export async function deleteNewsletterSubscriberBulk(ids: string[]): Promise<ActionResult> {
+  const supabase = await requireAuth();
+  const { error } = await supabase.from("newsletter_subscribers").delete().in("id", ids);
+  if (error) return { ok: false, error: error.message };
+  revalidatePath("/admin/newsletter");
   return { ok: true };
 }

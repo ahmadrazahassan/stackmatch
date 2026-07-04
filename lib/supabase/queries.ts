@@ -1,5 +1,5 @@
 import { createPublicClient, isSupabaseConfigured } from "./public";
-import type { Article, Category, Comparison, Review, Software } from "@/lib/types";
+import type { Article, Category, Comparison, Page, Review, Software } from "@/lib/types";
 
 // All public-page fetchers degrade to empty results when Supabase is not
 // configured or unreachable, so the site builds and renders with placeholders.
@@ -13,8 +13,28 @@ async function safe<T>(fallback: T, fn: () => Promise<T>): Promise<T> {
   }
 }
 
-export const SOFTWARE_CARD_COLUMNS =
+// Card columns come in two variants so the app stays up whether or not
+// migration_004 (which adds software.brand_color) has been applied yet —
+// expand/contract-safe deploys. `softwareCardColumns()` probes once per
+// process and caches the answer.
+const SOFTWARE_CARD_COLUMNS_BASE =
   "id, name, slug, tagline, description_short, logo_url, starting_price, price_currency, billing_period, free_trial, free_version, top_features, overall_rating, ease_of_use_rating, value_for_money_rating, customer_service_rating, functionality_rating, review_count, category_id, featured, status, affiliate_url, category:categories(id, name, slug)";
+
+export const SOFTWARE_CARD_COLUMNS = `id, name, slug, tagline, description_short, logo_url, starting_price, price_currency, billing_period, free_trial, free_version, top_features, brand_color, overall_rating, ease_of_use_rating, value_for_money_rating, customer_service_rating, functionality_rating, review_count, category_id, featured, status, affiliate_url, category:categories(id, name, slug)`;
+
+// null = not yet probed; true/false = column present or absent.
+let brandColorColumnPresent: boolean | null = null;
+
+async function softwareCardColumns(
+  supabase: ReturnType<typeof createPublicClient>
+): Promise<string> {
+  if (brandColorColumnPresent === null) {
+    const { error } = await supabase.from("software").select("brand_color").limit(1);
+    // 42703 = undefined_column → migration_004 not applied yet.
+    brandColorColumnPresent = !(error && error.code === "42703");
+  }
+  return brandColorColumnPresent ? SOFTWARE_CARD_COLUMNS : SOFTWARE_CARD_COLUMNS_BASE;
+}
 
 export async function getCategories(limit?: number): Promise<Category[]> {
   return safe([], async () => {
@@ -47,7 +67,7 @@ export async function getFeaturedSoftware(limit = 8): Promise<Software[]> {
     const supabase = createPublicClient();
     const { data } = await supabase
       .from("software")
-      .select(SOFTWARE_CARD_COLUMNS)
+      .select(await softwareCardColumns(supabase))
       .eq("status", "published")
       .eq("featured", true)
       .order("overall_rating", { ascending: false })
@@ -61,7 +81,7 @@ export async function getTopRatedSoftware(limit = 8): Promise<Software[]> {
     const supabase = createPublicClient();
     const { data } = await supabase
       .from("software")
-      .select(SOFTWARE_CARD_COLUMNS)
+      .select(await softwareCardColumns(supabase))
       .eq("status", "published")
       .gt("review_count", 0)
       .order("overall_rating", { ascending: false })
@@ -76,7 +96,7 @@ export async function getRecentlyUpdatedSoftware(limit = 6): Promise<Software[]>
     const supabase = createPublicClient();
     const { data } = await supabase
       .from("software")
-      .select(SOFTWARE_CARD_COLUMNS)
+      .select(await softwareCardColumns(supabase))
       .eq("status", "published")
       .order("updated_at", { ascending: false })
       .limit(limit);
@@ -119,7 +139,7 @@ export async function getSoftwareList(
 
     let query = supabase
       .from("software")
-      .select(SOFTWARE_CARD_COLUMNS, { count: "exact" })
+      .select(await softwareCardColumns(supabase), { count: "exact" })
       .eq("status", "published");
 
     if (filters.categoryId) query = query.eq("category_id", filters.categoryId);
@@ -221,7 +241,7 @@ export async function getAlternatives(softwareId: string, limit = 6): Promise<So
 
     const { data } = await supabase
       .from("software")
-      .select(SOFTWARE_CARD_COLUMNS)
+      .select(await softwareCardColumns(supabase))
       .in("id", ids)
       .eq("status", "published");
     const items = (data as unknown as Software[]) ?? [];
@@ -243,7 +263,7 @@ export async function getCategoryPeers(
     const supabase = createPublicClient();
     const { data } = await supabase
       .from("software")
-      .select(SOFTWARE_CARD_COLUMNS)
+      .select(await softwareCardColumns(supabase))
       .eq("status", "published")
       .eq("category_id", categoryId)
       .neq("id", softwareId)
@@ -277,7 +297,7 @@ export async function getPublishedComparisons(): Promise<Comparison[]> {
     const { data } = await supabase
       .from("comparisons")
       .select(
-        "*, software_a:software!comparisons_software_a_id_fkey(id, name, slug, logo_url, overall_rating, review_count), software_b:software!comparisons_software_b_id_fkey(id, name, slug, logo_url, overall_rating, review_count)"
+        "*, software_a:software!comparisons_software_a_id_fkey(id, name, slug, logo_url, brand_color, overall_rating, review_count, starting_price, price_currency, billing_period, functionality_rating, ease_of_use_rating, value_for_money_rating), software_b:software!comparisons_software_b_id_fkey(id, name, slug, logo_url, brand_color, overall_rating, review_count, starting_price, price_currency, billing_period, functionality_rating, ease_of_use_rating, value_for_money_rating)"
       )
       .eq("status", "published")
       .order("created_at", { ascending: false });
@@ -325,6 +345,19 @@ export async function getLatestArticles(limit = 3): Promise<Article[]> {
   return items;
 }
 
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  return safe(null, async () => {
+    const supabase = createPublicClient();
+    const { data } = await supabase
+      .from("pages")
+      .select("*")
+      .eq("slug", slug)
+      .eq("status", "published")
+      .maybeSingle();
+    return data as Page | null;
+  });
+}
+
 export async function getSiteStats(): Promise<{
   reviews: number;
   software: number;
@@ -351,7 +384,7 @@ export async function searchContent(
     const [s, a] = await Promise.all([
       supabase
         .from("software")
-        .select(SOFTWARE_CARD_COLUMNS)
+        .select(await softwareCardColumns(supabase))
         .eq("status", "published")
         .textSearch("search_vector", q, { type: "plain", config: "english" })
         .limit(20),

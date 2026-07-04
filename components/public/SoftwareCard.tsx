@@ -1,21 +1,22 @@
 import Link from "next/link";
 import { StarRating } from "./StarRating";
 import { SoftwareLogo } from "./SoftwareLogo";
+import { GlossyButton } from "./GlossyButton";
 import { formatPrice, formatRating, reviewCountLabel } from "@/lib/utils/formatRating";
 import type { Software } from "@/lib/types";
-import { softwareBrandColors } from "@/lib/brandColors";
+import { brandColorFor } from "@/lib/brandColors";
 
 export function SoftwareCard({ software }: { software: Software }) {
-  const brandColor = softwareBrandColors[software.slug] ?? "#00A86B";
+  const brandColor = brandColorFor(software);
 
   return (
-    <div 
-      className="group flex flex-col justify-between rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 shadow-sm transition-all duration-350 hover:-translate-y-1 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-md h-full font-sans relative overflow-hidden"
+    <div
+      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 font-sans shadow-[0_10px_30px_-18px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_44px_-22px_rgba(0,0,0,0.28)]"
     >
       <div className="space-y-4">
         {/* Top logo & Title row */}
         <div className="flex items-start gap-4">
-          <SoftwareLogo src={software.logo_url} name={software.name} size={52} className="rounded-xl border bg-white shadow-sm shrink-0" />
+          <SoftwareLogo src={software.logo_url} name={software.name} size={64} className="rounded-xl shrink-0" />
           <div className="min-w-0">
             <Link href={`/software/${software.slug}`} className="block">
               <h3 className="font-bold text-zinc-900 dark:text-zinc-50 group-hover:text-brand transition-colors text-base truncate">
@@ -49,7 +50,7 @@ export function SoftwareCard({ software }: { software: Software }) {
 
       {/* Starting Price & Free Trial Row */}
       <div className="mt-5 space-y-4">
-        <div className="pt-4 border-t border-dashed border-zinc-150 dark:border-zinc-800 flex items-center justify-between">
+        <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
           <div>
             <p className="text-[9px] font-bold text-zinc-400 dark:text-zinc-505 uppercase tracking-wider">Starting from</p>
             <p className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mt-0.5">
@@ -71,14 +72,8 @@ export function SoftwareCard({ software }: { software: Software }) {
           )}
         </div>
 
-        {/* CTA Link styled as a solid brand-colored button */}
-        <Link
-          href={`/software/${software.slug}`}
-          className="flex w-full items-center justify-center rounded-full text-white py-2.5 text-xs font-bold tracking-wider hover:opacity-90 transition-all duration-200 active:scale-[0.98] text-center"
-          style={{ backgroundColor: brandColor }}
-        >
-          VIEW PROFILE
-        </Link>
+        {/* Standard glossy primary CTA */}
+        <GlossyButton href={`/software/${software.slug}`} label="View Profile" variant="brand" brandColor={brandColor} />
       </div>
     </div>
   );

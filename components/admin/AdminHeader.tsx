@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LogOut, 
-  ExternalLink, 
+import { LogoMark } from "@/components/public/BrandLogo";
+import {
+  LogOut,
+  ExternalLink,
   LayoutDashboard,
   Monitor,
   Star,
@@ -14,6 +15,8 @@ import {
   GitCompareArrows,
   BarChart3,
   Settings,
+  Layout,
+  Mail,
   Menu,
   X
 } from "lucide-react";
@@ -33,6 +36,8 @@ const navItems = (counts: AdminHeaderProps["counts"] = { software: 0, reviews: 0
   { href: "/admin/articles", label: "Articles", icon: FileText, count: counts.articles },
   { href: "/admin/categories", label: "Categories", icon: FolderOpen },
   { href: "/admin/comparisons", label: "Comparisons", icon: GitCompareArrows },
+  { href: "/admin/pages", label: "Pages", icon: Layout },
+  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
@@ -79,8 +84,8 @@ export function AdminHeader({ counts }: AdminHeaderProps) {
         >
           <div className="flex items-center gap-2 sm:gap-6">
             <Link href="/admin" className="flex items-center gap-2 text-lg sm:text-xl font-extrabold tracking-tight text-foreground">
-              <img src="/logo.png" alt="CloudPayZA Logo" className="h-7 w-7 object-contain" />
-              <span>CloudPay<span className="text-brand">ZA</span></span>
+              <LogoMark className="h-7 w-7" />
+              <span>Stack <span className="text-brand">Match</span></span>
             </Link>
             
             {/* Desktop Nav */}
