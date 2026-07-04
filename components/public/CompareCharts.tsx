@@ -306,7 +306,7 @@ export function PriceBarChart({ a, b }: { a: PriceSide; b: PriceSide }) {
           />
           <Tooltip
             cursor={{ fill: t.grid, opacity: 0.3 }}
-            formatter={(value: number) => [formatPrice(value, currency), "Starting price"]}
+            formatter={(value) => [formatPrice(Number(value), currency), "Starting price"]}
             {...tooltipStyle(t)}
           />
           <Bar dataKey="price" radius={[0, 8, 8, 0]} maxBarSize={48} isAnimationActive animationDuration={1000} animationEasing="ease-out">
@@ -316,7 +316,7 @@ export function PriceBarChart({ a, b }: { a: PriceSide; b: PriceSide }) {
             <LabelList
               dataKey="price"
               position="right"
-              formatter={(v: number) => formatPrice(v, currency)}
+              formatter={(v) => formatPrice(Number(v), currency)}
               fontSize={12}
               fontWeight={700}
               fill={t.axis}
