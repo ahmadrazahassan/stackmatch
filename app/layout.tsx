@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight, DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { siteUrl } from "@/lib/siteUrl";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,8 +21,6 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://stackmatch.uk";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

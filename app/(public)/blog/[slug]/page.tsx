@@ -11,10 +11,9 @@ import { SoftwareLogo } from "@/components/public/SoftwareLogo";
 import { getArticleBySlug, getArticles } from "@/lib/supabase/queries";
 import { formatDate, formatDateShort } from "@/lib/utils/formatDate";
 import { formatRating, reviewCountLabel } from "@/lib/utils/formatRating";
+import { siteUrl } from "@/lib/siteUrl";
 
 export const revalidate = 3600;
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://stackmatch.uk";
 
 export async function generateMetadata({
   params,

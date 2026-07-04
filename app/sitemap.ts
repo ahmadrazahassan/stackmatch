@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { createPublicClient, isSupabaseConfigured } from "@/lib/supabase/public";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://stackmatch.uk";
+import { siteUrl } from "@/lib/siteUrl";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
