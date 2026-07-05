@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     locale: "en_GB",
     type: "website",
   },
+  other: {
+    "impact-site-verification": "7f618d94-5ff0-4763-bb59-559f0fd353de",
+  },
 };
 
 export default function RootLayout({
@@ -45,6 +48,9 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${inter.variable} ${interTight.variable} ${dmSans.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans">
+        {/* impact.com site verification expects their exact nonstandard value= attribute;
+            React 19 hoists this into <head> during SSR. */}
+        <meta name="impact-site-verification" {...{ value: "7f618d94-5ff0-4763-bb59-559f0fd353de" }} />
         {children}
         <Toaster position="top-right" richColors />
       </body>
