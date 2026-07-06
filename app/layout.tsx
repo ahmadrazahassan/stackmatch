@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight, DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@/components/ui/sonner";
 import { siteUrl } from "@/lib/siteUrl";
 import "./globals.css";
@@ -53,6 +54,7 @@ export default function RootLayout({
         <meta name="impact-site-verification" {...{ value: "7f618d94-5ff0-4763-bb59-559f0fd353de" }} />
         {children}
         <Toaster position="top-right" richColors />
+        <Analytics />
       </body>
     </html>
   );

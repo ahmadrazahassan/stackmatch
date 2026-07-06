@@ -119,7 +119,32 @@
       "Bash(ls -1 icon.* favicon.*)",
       "Bash(curl -sS -m 15 -o /dev/null -w \"github:%{http_code}\\\\n\" https://github.com)",
       "Bash(curl -sS -m 15 -o /dev/null -w \"freeagent:%{http_code}\\\\n\" https://www.freeagent.com)",
-      "Bash(node supabase/load_uk_reviews.js)"
+      "Bash(node supabase/load_uk_reviews.js)",
+      "Bash(git fetch *)",
+      "Bash(git rev-list *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(NEXT_PUBLIC_SITE_URL=stackmatch.uk npm run build)",
+      "Bash(node \"C:/Users/Ahmed/AppData/Local/Temp/claude/C--Users-Ahmed-Music-PROJECTS-cloudza/a8089894-1e54-422c-9d12-5dfa093b9f0a/scratchpad/audit_urls.js\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 30 --http1.1 -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/126.0 Safari/537.36\" -H \"Accept: text/html\" \"https://quickbooks.intuit.com/uk/\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 30 --http1.1 -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/126.0 Safari/537.36\" -H \"Accept: text/html\" \"https://quickbooks.intuit.com/za/\")",
+      "Bash(node supabase/fix_vendor_urls.js)",
+      "WebFetch(domain:stackmatch.uk)",
+      "Bash(grep -o -i -E '\\(commission|affiliate|sponsored|advertising\\)[^\"<]{0,120}' C:/Users/Ahmed/AppData/Local/Temp/claude/C--Users-Ahmed-Music-PROJECTS-cloudza/09825996-2524-41b4-b29d-36017020b51e/scratchpad/site/page_software_sage-accounting.html)",
+      "Bash(node supabase/update_site_branding.js)",
+      "Bash(node -e \"const s = require\\('sharp'\\); console.log\\('sharp OK', s.versions ? Object.keys\\(s.versions\\).join\\(','\\) : ''\\)\")",
+      "Bash(node \"C:/Users/Ahmed/AppData/Local/Temp/claude/C--Users-Ahmed-Music-PROJECTS-cloudza/09825996-2524-41b4-b29d-36017020b51e/scratchpad/make_logo.js\")",
+      "Bash(python -c \"import reportlab; print\\('reportlab', reportlab.Version\\)\")",
+      "Bash(py --version)",
+      "Bash(node make_media_kit.js)",
+      "Bash(curl -s --max-time 60 http://localhost:3000/)",
+      "Bash(python3 -)",
+      "Bash(npm i *)",
+      "Bash(ls C:/Windows/Fonts/ | grep -i -E \"^segoeui|^seguisb|^seguibl\" | head -8)",
+      "Bash(node \"C:/Users/Ahmed/AppData/Local/Temp/claude/C--Users-Ahmed-Music-PROJECTS-cloudza/09825996-2524-41b4-b29d-36017020b51e/scratchpad/make_logo_dark.js\")",
+      "Bash(node make_media_kit_v2.js)"
     ]
   }
 }
